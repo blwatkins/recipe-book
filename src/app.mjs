@@ -38,7 +38,23 @@ const limiter = rateLimit({
     ipv6Subnet: 56
 });
 
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: [
+                "'self'"
+            ],
+            scriptSrc: [
+                "'self'",
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/',
+            ],
+            connectSrc: [
+                "'self'",
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/'
+            ]
+        }
+    }
+}));
 app.use(cors());
 app.use(limiter);
 app.use(express.static('public'));
