@@ -20,16 +20,21 @@
  * SOFTWARE.
  */
 
+/**
+ * Get the trust proxy setting from environment variables.
+ *
+ * @return {number|boolean} The trust proxy setting. `false` if not set.
+ */
 function getTrustProxy() {
     const trustProxy = process.env.TRUST_PROXY;
 
     if (trustProxy === 'true') {
         return true;
-    } else if (trustProxy === 'false') {
-        return false;
-    } else {
-        return Number.parseInt(trustProxy, 10) || 1;
+    } else if (!Number.isNaN(Number.parseInt(trustProxy, 10))) {
+        return Number.parseInt(trustProxy, 10);
     }
+
+    return false;
 }
 
 export const PORT = Number.parseInt(process.env.PORT, 10) || 3000;
