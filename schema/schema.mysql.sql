@@ -20,7 +20,32 @@
  * SOFTWARE.
  */
 
-CREATE TABLE IF NOT EXISTS recipe_ingredients (
+# Create Tables
+CREATE TABLE IF NOT EXISTS units
+(
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE,
+    symbol VARCHAR(8) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS ingredients
+(
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS recipes
+(
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(128) NOT NULL UNIQUE,
+    serving_amount INTEGER,
+    serving_unit_id INTEGER,
+    directions VARCHAR(8192),
+    FOREIGN KEY (serving_unit_id) REFERENCES units(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS recipe_ingredients
+(
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     recipe_id INTEGER NOT NULL,
     ingredient_id INTEGER NOT NULL,
@@ -30,3 +55,21 @@ CREATE TABLE IF NOT EXISTS recipe_ingredients (
     FOREIGN KEY (ingredient_id) REFERENCES ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS unit_conversions
+(
+    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    unit_from_id INTEGER NOT NULL,
+    unit_to_id INTEGER NOT NULL,
+    conversion_factor DOUBLE NOT NULL,
+    UNIQUE (unit_from_id, unit_to_id),
+    FOREIGN KEY (unit_from_id) REFERENCES units(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (unit_to_id) REFERENCES units(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+# Drop Tables
+DROP TABLE IF EXISTS unit_conversions;
+DROP TABLE IF EXISTS recipe_ingredients;
+DROP TABLE IF EXISTS recipes;
+DROP TABLE IF EXISTS ingredients;
+DROP TABLE IF EXISTS units;
