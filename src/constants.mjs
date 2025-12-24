@@ -20,7 +20,28 @@
  * SOFTWARE.
  */
 
+/**
+ * Get the trust proxy setting from environment variables.
+ *
+ * @return {number|boolean} `true` for 'true', a number for valid numeric strings, or `false` for any other value or if not set.
+ */
+function getTrustProxy() {
+    const trustProxy = process.env.TRUST_PROXY;
+    const digitsRegex = /^\d+$/;
+
+    if (trustProxy === 'true') {
+        return true;
+    }
+
+    if (typeof trustProxy === 'string' && digitsRegex.test(trustProxy)) {
+        return Number.parseInt(trustProxy, 10);
+    }
+
+    return false;
+}
+
 export const PORT = Number.parseInt(process.env.PORT, 10) || 3000;
+export const TRUST_PROXY = getTrustProxy();
 export const APP_NAME = process.env.APP_NAME || 'recipe-book';
 export const USER_NAME = process.env.USER_NAME || 'User';
 
