@@ -19,7 +19,7 @@
     "start": "dotenvx run -f .env.prod -- node src/app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "dotenvx run -- nodemon src/app.mjs",
-    "dev:prod": "dotenvx run -f .env.prod -- nodemon src/app.mjs"
+    "dev:prod-config": "dotenvx run -f .env.prod -- nodemon src/app.mjs"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.2",
