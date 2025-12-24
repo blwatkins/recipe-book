@@ -27,14 +27,14 @@
  */
 function getTrustProxy() {
     const trustProxy = process.env.TRUST_PROXY;
-    const parsedTrustProxy = Number.parseInt(trustProxy, 10);
 
     if (trustProxy === 'true') {
         return true;
-    } else if (!Number.isNaN(parsedTrustProxy)) {
-        return parsedTrustProxy;
     }
 
+    if (typeof trustProxy === 'string' && /^[+-]?\d+$/.test(trustProxy)) {
+        return Number.parseInt(trustProxy, 10);
+    }
     return false;
 }
 
