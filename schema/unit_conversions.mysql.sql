@@ -26,6 +26,6 @@ CREATE TABLE IF NOT EXISTS unit_conversions (
     unit_to_id INTEGER NOT NULL,
     conversion_factor DOUBLE NOT NULL,
     UNIQUE (unit_from_id, unit_to_id),
-    FOREIGN KEY (unit_from_id) REFERENCES units(id),
-    FOREIGN KEY (unit_to_id) REFERENCES units(id)
+    FOREIGN KEY (unit_from_id) REFERENCES units(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (unit_to_id) REFERENCES units(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

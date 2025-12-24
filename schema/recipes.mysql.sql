@@ -26,5 +26,5 @@ CREATE TABLE IF NOT EXISTS recipes
     name VARCHAR(128) NOT NULL UNIQUE,
     serving_amount INTEGER,
     serving_unit_id INTEGER,
-    FOREIGN KEY (serving_unit_id) REFERENCES units(id)
+    FOREIGN KEY (serving_unit_id) REFERENCES units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
