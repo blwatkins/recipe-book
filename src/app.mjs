@@ -26,7 +26,7 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
-import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE } from './constants.mjs';
+import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, USER_NAME } from './constants.mjs';
 
 const app = express();
 
@@ -41,11 +41,19 @@ const limiter = rateLimit({
 app.use(helmet());
 app.use(cors());
 app.use(limiter);
+app.use(express.static('public'));
 
 app.disable('x-powered-by');
 
+app.set('views', 'views');
+app.set('view engine', 'ejs');
+
 app.get('/', (request, response) => {
-    response.send('Hello, World!');
+    response.render('index', {
+        title: `${APP_NAME} - Home`,
+        appName: APP_NAME,
+        username: USER_NAME
+    })
 });
 
 app.listen(PORT, () => {
