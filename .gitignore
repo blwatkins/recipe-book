@@ -8,6 +8,4 @@ node_modules/
 
 # Environment Variables
 .env
-.env.dev
 .env.keys
-.env.*
