@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS UnitConversions
     unit_from_id INTEGER NOT NULL,
     unit_to_id INTEGER NOT NULL,
     conversion_factor DOUBLE NOT NULL,
+    CHECK (unit_from_id <> unit_to_id),
     UNIQUE (unit_from_id, unit_to_id),
     FOREIGN KEY (unit_from_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (unit_to_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE
