@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Recipes
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
     category_id INTEGER,
-    serving_amount INTEGER,
+    serving_amount DOUBLE,
     serving_unit_id INTEGER,
     directions TEXT,
     FOREIGN KEY (category_id) REFERENCES RecipeCategories(id) ON DELETE RESTRICT ON UPDATE CASCADE,
