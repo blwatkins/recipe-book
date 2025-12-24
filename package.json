@@ -1,0 +1,21 @@
+{
+  "name": "recipe-book",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A full-stack web application for managing recipes and ingredients.",
+  "homepage": "https://github.com/blwatkins/recipe-book#readme",
+  "bugs": {
+    "url": "https://github.com/blwatkins/recipe-book/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blwatkins/recipe-book.git"
+  },
+  "license": "MIT",
+  "author": "brittni watkins",
+  "type": "module",
+  "main": "src/app.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
