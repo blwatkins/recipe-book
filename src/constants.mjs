@@ -20,8 +20,9 @@
  * SOFTWARE.
  */
 
-export const PORT = process.env.PORT || 3000;
+export const PORT = Number.parseInt(process.env.PORT, 10) || 3000;
 export const APP_NAME = process.env.APP_NAME || 'recipe-book';
+export const USER_NAME = process.env.USER_NAME || 'User';
 
 export const MILLIS_PER_SECOND = 1000;
 export const SECONDS_PER_MINUTE = 60;
