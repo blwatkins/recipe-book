@@ -26,11 +26,11 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
-import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, USER_NAME } from './constants.mjs';
+import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, TRUST_PROXY, USER_NAME } from './constants.mjs';
 
 const app = express();
 
-app.set('trust proxy', 1);
+app.set('trust proxy', TRUST_PROXY);
 
 const limiter = rateLimit({
     windowMs: MILLIS_PER_SECOND * SECONDS_PER_MINUTE,
