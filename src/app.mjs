@@ -47,10 +47,6 @@ app.use(helmet({
             scriptSrc: [
                 "'self'",
                 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/',
-            ],
-            connectSrc: [
-                "'self'",
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/'
             ]
         }
     }
@@ -69,7 +65,7 @@ app.get('/', (request, response) => {
         title: `${APP_NAME} - Home`,
         appName: APP_NAME,
         username: USER_NAME
-    })
+    });
 });
 
 app.listen(PORT, () => {
