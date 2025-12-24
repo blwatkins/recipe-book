@@ -20,7 +20,20 @@
  * SOFTWARE.
  */
 
+function getTrustProxy() {
+    const trustProxy = process.env.TRUST_PROXY;
+
+    if (trustProxy === 'true') {
+        return true;
+    } else if (trustProxy === 'false') {
+        return false;
+    } else {
+        return Number.parseInt(trustProxy, 10) || 1;
+    }
+}
+
 export const PORT = Number.parseInt(process.env.PORT, 10) || 3000;
+export const TRUST_PROXY = getTrustProxy();
 export const APP_NAME = process.env.APP_NAME || 'recipe-book';
 export const USER_NAME = process.env.USER_NAME || 'User';
 
