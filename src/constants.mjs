@@ -23,7 +23,7 @@
 /**
  * Get the trust proxy setting from environment variables.
  *
- * @return {number|boolean} The trust proxy setting. `false` if not set.
+ * @return {number|boolean} Returns `true` for 'true', a number for valid numeric strings, or `false` for any other value or if not set.
  */
 function getTrustProxy() {
     const trustProxy = process.env.TRUST_PROXY;
