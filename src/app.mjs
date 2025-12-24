@@ -30,6 +30,8 @@ import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, USER_NAME } from
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 const limiter = rateLimit({
     windowMs: MILLIS_PER_SECOND * SECONDS_PER_MINUTE,
     limit: 100,
