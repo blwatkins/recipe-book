@@ -27,14 +27,16 @@
  */
 function getTrustProxy() {
     const trustProxy = process.env.TRUST_PROXY;
+    const digitsRegex = /^\d+$/;
 
     if (trustProxy === 'true') {
         return true;
     }
 
-    if (typeof trustProxy === 'string' && /^[+-]?\d+$/.test(trustProxy)) {
+    if (typeof trustProxy === 'string' && digitsRegex.test(trustProxy)) {
         return Number.parseInt(trustProxy, 10);
     }
+
     return false;
 }
 
