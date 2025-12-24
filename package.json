@@ -16,7 +16,8 @@
   "type": "module",
   "main": "src/app.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "dotenvx run -f .env.dev -- nodemon src/app.mjs"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.2",
