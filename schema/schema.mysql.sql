@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Recipes
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
     category_id INTEGER,
-    serving_amount INTEGER,
+    serving_amount DOUBLE,
     serving_unit_id INTEGER,
     directions TEXT,
     FOREIGN KEY (category_id) REFERENCES RecipeCategories(id) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     ingredient_id INTEGER NOT NULL,
     measurement DOUBLE,
     measurement_unit_id INTEGER,
+    UNIQUE (recipe_id, ingredient_id),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -77,6 +78,7 @@ CREATE TABLE IF NOT EXISTS UnitConversions
     unit_from_id INTEGER NOT NULL,
     unit_to_id INTEGER NOT NULL,
     conversion_factor DOUBLE NOT NULL,
+    CHECK (unit_from_id <> unit_to_id),
     UNIQUE (unit_from_id, unit_to_id),
     FOREIGN KEY (unit_from_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (unit_to_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE
