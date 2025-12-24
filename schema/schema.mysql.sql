@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     ingredient_id INTEGER NOT NULL,
     measurement DOUBLE,
     measurement_unit_id INTEGER,
+    UNIQUE (recipe_id, ingredient_id),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
