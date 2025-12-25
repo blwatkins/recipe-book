@@ -54,11 +54,11 @@ CREATE TABLE IF NOT EXISTS Recipes
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
-    serving_amount DOUBLE NOT NULL,
+    serving_amount DECIMAL(10,3) NOT NULL,
     serving_unit_id INTEGER NOT NULL,
     approximate_servings BOOLEAN NOT NULL DEFAULT FALSE,
     directions TEXT,
-    CHECK (serving_amount > 0.01),
+    CHECK (serving_amount > 0),
     FOREIGN KEY (serving_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -88,10 +88,10 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     recipe_id INTEGER NOT NULL,
     ingredient_id INTEGER NOT NULL,
     preparation_notes VARCHAR(256),
-    measurement_amount DOUBLE NOT NULL,
+    measurement_amount DECIMAL(10,3) NOT NULL,
     measurement_unit_id INTEGER NOT NULL,
     approximate_measurement BOOLEAN NOT NULL DEFAULT FALSE,
-    CHECK (measurement_amount > 0.01),
+    CHECK (measurement_amount > 0),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS UnitConversions
     FOREIGN KEY (unit_to_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX idx_recipe_ingredients ON RecipeIngredients(ingredient_id);
-CREATE INDEX idx_recipe ON RecipeIngredients(recipe_id);
+CREATE INDEX idx_RecipeIngredients_ingredients ON RecipeIngredients(ingredient_id);
+CREATE INDEX idx_RecipeIngredients_recipes ON RecipeIngredients(recipe_id);
 
 delimiter //
 CREATE TRIGGER unit_conversions_insert_check BEFORE INSERT ON UnitConversions
