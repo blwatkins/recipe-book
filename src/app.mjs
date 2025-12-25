@@ -78,7 +78,14 @@ const REQUIRED_VIEWS_DATA = {
 
 app.get('/', (request, response) => {
     response.render('index', {
-        title: `${APP_NAME} - Home`,
+        title: 'Home',
+        constants: REQUIRED_VIEWS_DATA
+    });
+});
+
+app.get('/ingredient-category/new', (request, response) => {
+    response.render('ingredient-category/form', {
+        title: 'New Ingredient Category',
         constants: REQUIRED_VIEWS_DATA
     });
 });
