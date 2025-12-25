@@ -26,7 +26,15 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
-import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, TRUST_PROXY, USER_NAME } from './constants.mjs';
+import {
+    APP_NAME,
+    COPYRIGHT_HOLDER,
+    MILLIS_PER_SECOND,
+    PORT,
+    SECONDS_PER_MINUTE,
+    TRUST_PROXY,
+    USER_NAME
+} from './constants.mjs';
 
 const app = express();
 
@@ -62,11 +70,16 @@ app.disable('x-powered-by');
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 
+const REQUIRED_VIEWS_DATA = {
+    APP_NAME: APP_NAME,
+    USER_NAME: USER_NAME,
+    COPYRIGHT_HOLDER: COPYRIGHT_HOLDER
+}
+
 app.get('/', (request, response) => {
     response.render('index', {
         title: `${APP_NAME} - Home`,
-        appName: APP_NAME,
-        username: USER_NAME
+        constants: REQUIRED_VIEWS_DATA
     });
 });
 
