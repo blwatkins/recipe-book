@@ -22,18 +22,21 @@
 
 import { DatabaseClient } from './database-client.mjs';
 
-export class IngredientsCategoriesClient extends DatabaseClient {
+export class IngredientCategoriesClient extends DatabaseClient {
     constructor() {
         super();
     }
 
-    async queryAllIngredientsCategories() {
-        const query = 'SELECT * FROM IngredientsCategories ORDER BY name ASC;';
+    async queryAllIngredientCategories() {
+        const query = 'SELECT * FROM IngredientCategories';
         return await this.queryAll(query);
     }
 
-    async queryAllIngredientsCategoryNames() {
-        const query = 'SELECT name FROM IngredientsCategories ORDER BY name ASC;';
+    /**
+     * @returns {Promise<*[]>}
+     */
+    async queryAllIngredientCategoryNames() {
+        const query = 'SELECT name FROM IngredientCategories ORDER BY name ASC';
         return await this.queryAll(query);
     }
 

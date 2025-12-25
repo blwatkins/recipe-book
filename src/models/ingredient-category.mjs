@@ -20,18 +20,27 @@
  * SOFTWARE.
  */
 
-import {IngredientsCategoriesClient} from "../db/ingredients-category-client.mjs";
+import { IngredientCategoriesClient } from '../db/ingredients-category-client.mjs';
 
 export class IngredientCategory {
     static #names = [];
 
-    async static get names() {
-        if (this.#names.length === 0) {
-            const dbClient = new IngredientsCategoriesClient();
-            this.#names = await dbClient.queryAllIngredientsCategoryNames();
-            dbClient.closeConnection();
+    static async getAllNames() {
+        if (IngredientCategory.#names.length === 0) {
+            const dbClient = await IngredientCategory.buildDatabaseClient();
+            IngredientCategory.#names = await dbClient.queryAllIngredientCategoryNames();
+            console.log('Loaded ingredient category names:', IngredientCategory.#names);
+            await dbClient.closeConnection();
         }
 
-        return this.#names;
+        return IngredientCategory.#names;
+    }
+
+    static async buildDatabaseClient() {
+        const dbClient = new IngredientCategoriesClient();
+        await IngredientCategoriesClient.buildConnection()
+            .then((connection) => { dbClient.connection = connection; })
+            .catch((error) => { console.error('Error building database connection.', error); });
+        return dbClient;
     }
 }

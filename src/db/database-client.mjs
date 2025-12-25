@@ -63,7 +63,7 @@ export class DatabaseClient {
     /**
      * @returns {Promise<Connection>}
      */
-    async static buildConnection() {
+    static async buildConnection() {
         return mysql.createConnection({
             host: process.env.MYSQL_HOST,
             port: Number.parseInt(process.env.MYSQL_PORT, 10),
@@ -73,19 +73,28 @@ export class DatabaseClient {
         });
     }
 
-    closeConnection() {
+    async closeConnection() {
         if (this.#connection) {
-            this.#connection.close()
-                .then(() => console.log('Database connection closed.'))
-                .catch((error) => console.log('Error closing database connection.', error));
+            await this.#connection.end()
+                .then(() => {
+                    this.#connection = null;
+                })
+                .catch((error) => console.error('Error closing database connection.', error));
         }
     }
 
+    /**
+     * @param query {string}
+     * @returns {Promise<*[]>}
+     */
     async queryAll(query) {
         if (this.connection) {
-            const [rows] = await this.connection.execute(query)
-                .catch(error => console.error('Error querying database.', error));
-            return rows;
+            try {
+                const [rows] = await this.connection.execute(query);
+                return rows;
+            } catch (error) {
+                console.error('Error querying database.', error);
+            }
         }
 
         return [];

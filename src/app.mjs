@@ -35,7 +35,8 @@ import {
     TRUST_PROXY,
     USER_NAME
 } from './constants.mjs';
-import {DatabaseClient} from "./db/database-client.mjs";
+
+import { IngredientCategory } from "./models/ingredient-category.mjs";
 
 const app = express();
 
@@ -85,14 +86,8 @@ app.get('/', (request, response) => {
 });
 
 app.get('/ingredient-category/new', async (request, response) => {
-    const dbClient = new DatabaseClient();
-
-    await DatabaseClient.buildConnection()
-        .then((connection) => {
-            dbClient.connection = connection;
-        });
-
-    dbClient.closeConnection();
+    const allNames = await IngredientCategory.getAllNames();
+    console.log(allNames);
     response.render('ingredient-category/form', {
         title: 'New Ingredient Category',
         constants: REQUIRED_VIEWS_DATA
