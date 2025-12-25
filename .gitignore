@@ -15,3 +15,6 @@ node_modules/
 
 # MySQL
 users.mysql.sql
+
+# webpack
+dist/
