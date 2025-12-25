@@ -20,22 +20,66 @@
  * SOFTWARE.
  */
 
+import { Validation } from '../../src-shared/validation.mjs';
+
 import { IngredientCategoriesClient } from '../db/ingredients-category-client.mjs';
 
 export class IngredientCategory {
-    static #names = [];
+    /**
+     * @type {string[]}
+     */
+    static #namesCache = [];
 
+    /**
+     * @returns {void}
+     */
+    static clearCache() {
+        IngredientCategory.#namesCache = [];
+    }
+
+    /**
+     * @param name {string}
+     * @param description {string | null}
+     * @returns {Promise<boolean>}
+     * @throws {Error}
+     */
+    static async addCategory(name, description) {
+        if (!Validation.isNonEmptyString(name)) {
+            throw new Error('IngredientCategory name must be a non-empty string.');
+        } else {
+            name = name.trim();
+        }
+
+        if (!Validation.isNonEmptyString(description)) {
+            description = null;
+        } else {
+            description = description.trim();
+        }
+
+        const dbClient = await IngredientCategory.buildDatabaseClient();
+        const success = await dbClient.insertIngredientCategory(name, description);
+        await dbClient.closeConnection();
+        IngredientCategory.clearCache();
+        return success;
+    }
+
+    /**
+     * @returns {Promise<string[]>}
+     */
     static async getAllNames() {
-        if (IngredientCategory.#names.length === 0) {
+        if (IngredientCategory.#namesCache.length === 0) {
             const dbClient = await IngredientCategory.buildDatabaseClient();
-            IngredientCategory.#names = await dbClient.queryAllIngredientCategoryNames();
-            console.log('Loaded ingredient category names:', IngredientCategory.#names);
+            const result = await dbClient.queryAllIngredientCategoryNames();
+            IngredientCategory.#namesCache = result.map(row => row.name);
             await dbClient.closeConnection();
         }
 
-        return IngredientCategory.#names;
+        return IngredientCategory.#namesCache;
     }
 
+    /**
+     * @returns {Promise<IngredientCategoriesClient>}
+     */
     static async buildDatabaseClient() {
         const dbClient = new IngredientCategoriesClient();
         await IngredientCategoriesClient.buildConnection()
