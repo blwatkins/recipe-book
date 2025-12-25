@@ -23,9 +23,9 @@
 CREATE TABLE IF NOT EXISTS Units
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    singular_name VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
-    plural_name VARCHAR(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
-    symbol VARCHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE
+    singular_name VARCHAR(64) NOT NULL UNIQUE,
+    plural_name VARCHAR(64) NOT NULL UNIQUE,
+    symbol VARCHAR(8) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS IngredientCategories
@@ -106,46 +106,3 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
 
 CREATE INDEX idx_RecipeIngredients_ingredients ON RecipeIngredients(ingredient_id);
 CREATE INDEX idx_RecipeIngredients_recipes ON RecipeIngredients(recipe_id);
-
-CREATE TABLE IF NOT EXISTS UnitConversions
-(
-    id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    unit_from_id INTEGER NOT NULL,
-    unit_to_id INTEGER NOT NULL,
-    conversion_factor DECIMAL(20,10) NOT NULL,
-    UNIQUE (unit_from_id, unit_to_id),
-    CHECK (conversion_factor > 0),
-    FOREIGN KEY (unit_from_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (unit_to_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE INDEX idx_UnitConversions_unit_from ON UnitConversions(unit_from_id);
-CREATE INDEX idx_UnitConversions_unit_to ON UnitConversions(unit_to_id);
-
-delimiter //
-CREATE TRIGGER unit_conversions_insert_check BEFORE INSERT ON UnitConversions
-FOR EACH ROW
-BEGIN
-    IF NEW.unit_from_id = NEW.unit_to_id THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'unit_from_id and unit_to_id cannot be the same.';
-    END IF;
-
-    IF NEW.unit_from_id > NEW.unit_to_id THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'To maintain directionality and consistency, unit_from_id must be less than unit_to_id.';
-    END IF;
-END;//
-delimiter ;
-
-delimiter //
-CREATE TRIGGER unit_conversions_update_check BEFORE UPDATE ON UnitConversions
-FOR EACH ROW
-BEGIN
-    IF NEW.unit_from_id = NEW.unit_to_id THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'unit_from_id and unit_to_id cannot be the same.';
-    END IF;
-
-    IF NEW.unit_from_id > NEW.unit_to_id THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'To maintain directionality and consistency, unit_from_id must be less than unit_to_id.';
-    END IF;
-END;//
-delimiter ;
