@@ -20,8 +20,12 @@
  * SOFTWARE.
  */
 
+DROP TRIGGER IF EXISTS unit_conversions_check;
+
 DROP TABLE IF EXISTS UnitConversions;
 DROP TABLE IF EXISTS RecipeIngredients;
+DROP TABLE IF EXISTS RecipeCategoryAssignments;
+DROP TABLE IF EXISTS IngredientCategoryAssignments;
 DROP TABLE IF EXISTS Recipes;
 DROP TABLE IF EXISTS Ingredients;
 DROP TABLE IF EXISTS RecipeCategories;
