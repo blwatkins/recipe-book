@@ -23,8 +23,9 @@
 CREATE TABLE IF NOT EXISTS Units
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(64) NOT NULL UNIQUE,
-    symbol VARCHAR(8) UNIQUE
+    singular_name VARCHAR(64) NOT NULL UNIQUE,
+    plural_name VARCHAR(64) NOT NULL UNIQUE,
+    symbol VARCHAR(8) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS IngredientCategories
@@ -86,10 +87,10 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     recipe_id INTEGER NOT NULL,
     ingredient_id INTEGER NOT NULL,
+    preparation_notes VARCHAR(256),
     measurement_amount DOUBLE NOT NULL,
     measurement_unit_id INTEGER NOT NULL,
     approximate_measurement BOOLEAN NOT NULL DEFAULT FALSE,
-    UNIQUE (recipe_id, ingredient_id),
     CHECK (measurement_amount > 0),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -109,13 +110,23 @@ CREATE TABLE IF NOT EXISTS UnitConversions
 );
 
 CREATE INDEX idx_recipe_ingredients ON RecipeIngredients(ingredient_id);
+CREATE INDEX idx_recipe ON RecipeIngredients(recipe_id);
 
 delimiter //
-CREATE TRIGGER unit_conversions_check AFTER INSERT ON UnitConversions
+CREATE TRIGGER IF NOT EXISTS unit_conversions_insert_check BEFORE INSERT ON UnitConversions
 FOR EACH ROW
 BEGIN
     IF NEW.unit_from_id = NEW.unit_to_id THEN
-        DELETE FROM UnitConversions WHERE id = NEW.id;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'unit_from_id and unit_to_id cannot be the same.';
+    END IF;
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER IF NOT EXISTS unit_conversions_update_check BEFORE UPDATE ON UnitConversions
+    FOR EACH ROW
+BEGIN
+    IF NEW.unit_from_id = NEW.unit_to_id THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'unit_from_id and unit_to_id cannot be the same.';
     END IF;
 END;//
