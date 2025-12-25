@@ -65,6 +65,7 @@ app.use(helmet({
 }));
 app.use(cors());
 app.use(limiter);
+app.use(express.json());
 app.use(express.static('public'));
 
 app.disable('x-powered-by');
@@ -86,12 +87,40 @@ app.get('/', (request, response) => {
 });
 
 app.get('/ingredient-category/new', async (request, response) => {
-    const allNames = await IngredientCategory.getAllNames();
-    console.log(allNames);
     response.render('ingredient-category/form', {
         title: 'New Ingredient Category',
         constants: REQUIRED_VIEWS_DATA
     });
+});
+
+app.get('/api/ingredient-category/names', async (request, response) => {
+    const names = await IngredientCategory.getAllNames();
+    response.json(names);
+});
+
+app.post('/api/ingredient-category', async (request, response) => {
+    if (!request.body || !request.body.name) {
+        response.status(400).json({ message: 'Invalid request body.' });
+        return;
+    }
+
+    const { name, description } = request.body;
+    const success = await IngredientCategory.addCategory(name, description);
+
+    if (success) {
+        response.status(201).json({ message: 'Ingredient category created successfully.' });
+    } else {
+        response.status(500).json({ message: 'Failed to create ingredient category.' });
+    }
+});
+
+app.use((error, request, response, next) => {
+    console.log(error);
+    response.status(500).send('Internal Server Error.');
+});
+
+app.use((request, response, next) => {
+    response.status(404).send('Not Found.');
 });
 
 app.listen(PORT, () => {
