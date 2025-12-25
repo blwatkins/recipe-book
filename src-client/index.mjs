@@ -23,8 +23,9 @@
 import { INGREDIENT_CATEGORY_FORM_ID } from './constants.mjs';
 import { IngredientCategoryFormHandler } from './ingredient-category-form.mjs';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (document.getElementById(INGREDIENT_CATEGORY_FORM_ID)) {
-        new IngredientCategoryFormHandler();
+        const handler = new IngredientCategoryFormHandler();
+        await handler.init();
     }
 });

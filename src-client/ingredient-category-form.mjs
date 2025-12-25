@@ -20,18 +20,107 @@
  * SOFTWARE.
  */
 
+import { Validation } from "../src-shared/validation.mjs";
+import {INGREDIENT_CATEGORY_FORM_ID} from "./constants.mjs";
+
 export class IngredientCategoryFormHandler {
+    // TODO - input validation
+    // TODO - form submission handling (fetch API)
+    // TODO - success/error feedback to user
+    /**
+     * @type {string[]}
+     */
+    #categoryNames = [];
+
+    #NAME_INPUT_ID = 'name';
+    #NAME_INPUT = undefined;
+    #NAME_INVALID_FEEDBACK_ID = 'invalid-feedback-name';
+
     constructor() {
-        this.NAME_INPUT_ID = 'name';
-        this.DESCRIPTION_INPUT_ID = 'description';
-        this.init();
     }
 
-    init() {
+    async init() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', async () => {
+                await this.#init();
+            });
+        } else {
+            await this.#init();
+        }
+    }
+
+    async #init() {
+        this.#categoryNames = await this.#getCategoryNames();
         this.#decorateForm();
     }
 
     #decorateForm() {
-        const nameInput = document.getElementById(this.NAME_INPUT_ID);
+        this.#NAME_INPUT = document.getElementById(this.#NAME_INPUT_ID);
+        // const descriptionInput = document.getElementById(this.DESCRIPTION_INPUT_ID);
+
+        const form = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
+
+        if (form) {
+            form.addEventListener('change', () => {
+                form.classList.remove('was-validated');
+                form.checkValidity();
+                this.#updateFormValidationState();
+                form.classList.add('was-validated');
+            });
+        }
+    }
+
+    #isFormValid() {
+        return this.#isNameInputValid();
+    }
+
+    #isNameInputValid() {
+        return this.#isStringInputValid(this.#NAME_INPUT);
+    }
+
+    #isDescriptionInputValid() {
+
+    }
+
+    #isStringInputValid(input) {
+        if (!input &&
+            !(input instanceof HTMLInputElement) &&
+            !(input instanceof HTMLTextAreaElement)) {
+            console.log('input must be a valid HTMLInputElement');
+            return false;
+        }
+
+        return Validation.isNonEmptyString(input.value);
+    }
+
+    #updateFormValidationState() {
+        this.#setValidation(this.#NAME_INPUT, this.#isNameInputValid(), 'Please enter a valid category name.');
+    }
+
+    #setValidation(element, isValid, message){
+        if (element && (element instanceof HTMLElement)) {
+            if (isValid) {
+                element.setCustomValidity('');
+            } else {
+                element.setCustomValidity(message);
+            }
+        }
+    }
+
+    /**
+     * @returns {Promise<string[]>}
+     */
+    async #getCategoryNames() {
+        try {
+            const response = await fetch('/api/ingredient-category/names');
+
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.error('Error fetching category names.', error);
+        }
+
+        return [];
     }
 }
