@@ -20,38 +20,18 @@
  * SOFTWARE.
  */
 
-"use strict";
-
-(() => {
-    const FORM_ID = 'ingredient-category-form';
-    const NAME_INPUT_ID = 'name';
-    const DESCRIPTION_INPUT_ID = 'description';
-
-    // TODO - form validation logic
-    // TODO - form validation logic - does the category name already exist?
-    // TODO - form submission logic
-    // TODO - success and error handling
-
-    function buildRequestBody(name, description) {
-        const requestBody = {
-            name: name
-        }
-
-        if (description) {
-            requestBody.description = description;
-        }
-
-        return requestBody;
+export class IngredientCategoryFormHandler {
+    constructor() {
+        this.NAME_INPUT_ID = 'name';
+        this.DESCRIPTION_INPUT_ID = 'description';
+        this.init();
     }
 
-    async function submitForm() {
-        const nameInput = document.getElementById(NAME_INPUT_ID);
-        const descriptionInput = document.getElementById(DESCRIPTION_INPUT_ID);
-
-        if (nameInput && descriptionInput) {
-            const name = nameInput.value.trim();
-            const description = descriptionInput.value.trim();
-            const requestBody = buildRequestBody(name, description);
-        }
+    init() {
+        this.#decorateForm();
     }
-})();
+
+    #decorateForm() {
+        const nameInput = document.getElementById(this.NAME_INPUT_ID);
+    }
+}

@@ -20,11 +20,4 @@
  * SOFTWARE.
  */
 
-import { INGREDIENT_CATEGORY_FORM_ID } from './constants.mjs';
-import { IngredientCategoryFormHandler } from './ingredient-category-form.mjs';
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById(INGREDIENT_CATEGORY_FORM_ID)) {
-        new IngredientCategoryFormHandler();
-    }
-});
+export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';

@@ -21,7 +21,7 @@
     "build:watch": "webpack --mode=development --watch",
     "start": "dotenvx run -f .env.prod -- node src/app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run build:dev; dotenvx run -f .env -- nodemon src/app.mjs",
+    "dev": "dotenvx run -f .env -- nodemon src/app.mjs",
     "dev:prod-config": "npm run build; dotenvx run -f .env.prod -- nodemon src/app.mjs"
   },
   "dependencies": {
