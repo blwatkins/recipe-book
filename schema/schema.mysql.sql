@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Recipes
     serving_unit_id INTEGER NOT NULL,
     approximate_servings BOOLEAN NOT NULL DEFAULT FALSE,
     directions TEXT,
-    CHECK (serving_amount > 0),
+    CHECK (serving_amount > 0.01),
     FOREIGN KEY (serving_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     measurement_amount DOUBLE NOT NULL,
     measurement_unit_id INTEGER NOT NULL,
     approximate_measurement BOOLEAN NOT NULL DEFAULT FALSE,
-    CHECK (measurement_amount > 0),
+    CHECK (measurement_amount > 0.01),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -113,7 +113,7 @@ CREATE INDEX idx_recipe_ingredients ON RecipeIngredients(ingredient_id);
 CREATE INDEX idx_recipe ON RecipeIngredients(recipe_id);
 
 delimiter //
-CREATE TRIGGER IF NOT EXISTS unit_conversions_insert_check BEFORE INSERT ON UnitConversions
+CREATE TRIGGER unit_conversions_insert_check BEFORE INSERT ON UnitConversions
 FOR EACH ROW
 BEGIN
     IF NEW.unit_from_id = NEW.unit_to_id THEN
@@ -123,8 +123,8 @@ END;//
 delimiter ;
 
 delimiter //
-CREATE TRIGGER IF NOT EXISTS unit_conversions_update_check BEFORE UPDATE ON UnitConversions
-    FOR EACH ROW
+CREATE TRIGGER unit_conversions_update_check BEFORE UPDATE ON UnitConversions
+FOR EACH ROW
 BEGIN
     IF NEW.unit_from_id = NEW.unit_to_id THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'unit_from_id and unit_to_id cannot be the same.';
