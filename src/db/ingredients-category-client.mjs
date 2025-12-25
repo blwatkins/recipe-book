@@ -20,9 +20,14 @@
  * SOFTWARE.
  */
 
+import { Validation } from '../../src-shared/validation.mjs';
+
 import { DatabaseClient } from './database-client.mjs';
 
 export class IngredientCategoriesClient extends DatabaseClient {
+    /**
+     * @inheritDoc
+     */
     constructor() {
         super();
     }
@@ -33,14 +38,45 @@ export class IngredientCategoriesClient extends DatabaseClient {
     }
 
     /**
-     * @returns {Promise<*[]>}
+     * @returns {Promise<{name: string}[]>}
      */
     async queryAllIngredientCategoryNames() {
-        const query = 'SELECT name FROM IngredientCategories ORDER BY name ASC';
+        const query = 'SELECT name FROM IngredientCategories ORDER BY name';
         return await this.queryAll(query);
     }
 
+    /**
+     * @param name {string}
+     * @param description {string | null}
+     * @returns {Promise<boolean>}
+     */
     async insertIngredientCategory(name, description) {
+        const query = 'INSERT INTO IngredientCategories (name, description) VALUES (?, ?)';
 
+        if (!Validation.isNonEmptyString(name)) {
+            throw new Error('IngredientCategory name must be a non-empty string.');
+        } else {
+            name = name.trim();
+        }
+
+        if (!Validation.isNonEmptyString(description)) {
+            description = null;
+        } else {
+            description = description.trim();
+        }
+
+        const params = [name, description];
+
+        if (this.connection) {
+            try {
+                await this.connection.execute(query, params);
+                return true;
+            } catch (error) {
+                console.error('Error inserting ingredient category.', error);
+                return false;
+            }
+        }
+
+        return false;
     }
 }
