@@ -69,8 +69,11 @@ CREATE TABLE IF NOT EXISTS IngredientCategoryAssignments
     category_id INTEGER NOT NULL,
     UNIQUE (ingredient_id, category_id),
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES IngredientCategories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (category_id) REFERENCES IngredientCategories(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE INDEX idx_IngredientCategoryAssignments_ingredients ON IngredientCategoryAssignments(ingredient_id);
+CREATE INDEX idx_IngredientCategoryAssignments_categories ON IngredientCategoryAssignments(category_id);
 
 CREATE TABLE IF NOT EXISTS RecipeCategoryAssignments
 (
@@ -79,23 +82,30 @@ CREATE TABLE IF NOT EXISTS RecipeCategoryAssignments
     category_id INTEGER NOT NULL,
     UNIQUE (recipe_id, category_id),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES RecipeCategories(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (category_id) REFERENCES RecipeCategories(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE INDEX idx_RecipeCategoryAssignments_recipes ON RecipeCategoryAssignments(recipe_id);
+CREATE INDEX idx_RecipeCategoryAssignments_categories ON RecipeCategoryAssignments(category_id);
 
 CREATE TABLE IF NOT EXISTS RecipeIngredients
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     recipe_id INTEGER NOT NULL,
     ingredient_id INTEGER NOT NULL,
-    preparation_notes VARCHAR(256),
+    preparation_notes VARCHAR(256) NOT NULL DEFAULT '',
     measurement_amount DECIMAL(10,3) NOT NULL,
     measurement_unit_id INTEGER NOT NULL,
     approximate_measurement BOOLEAN NOT NULL DEFAULT FALSE,
+    UNIQUE (recipe_id, ingredient_id, preparation_notes),
     CHECK (measurement_amount > 0),
     FOREIGN KEY (recipe_id) REFERENCES Recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (measurement_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE INDEX idx_RecipeIngredients_ingredients ON RecipeIngredients(ingredient_id);
+CREATE INDEX idx_RecipeIngredients_recipes ON RecipeIngredients(recipe_id);
 
 CREATE TABLE IF NOT EXISTS UnitConversions
 (
@@ -109,8 +119,8 @@ CREATE TABLE IF NOT EXISTS UnitConversions
     FOREIGN KEY (unit_to_id) REFERENCES Units(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX idx_RecipeIngredients_ingredients ON RecipeIngredients(ingredient_id);
-CREATE INDEX idx_RecipeIngredients_recipes ON RecipeIngredients(recipe_id);
+CREATE INDEX idx_UnitConversions_unit_from ON UnitConversions(unit_from_id);
+CREATE INDEX idx_UnitConversions_unit_to ON UnitConversions(unit_to_id);
 
 delimiter //
 CREATE TRIGGER unit_conversions_insert_check BEFORE INSERT ON UnitConversions
