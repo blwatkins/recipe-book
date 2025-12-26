@@ -20,12 +20,29 @@
  * SOFTWARE.
  */
 
+/**
+ * @type {string}
+ */
 export const WAS_VALIDATED_CLASS = 'was-validated';
 
+/**
+ * @type {string}
+ */
 export const DISABLE_TOGGLE_CLASS = 'disable-toggle';
 
+/**
+ * @type {string}
+ */
 export const FORM_ALERT_ID = 'form-alert';
 
+/**
+ * @type {string}
+ */
 export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';
 
+/**
+ * Timeout duration for form submissions in milliseconds.
+ * Default 10 seconds timeout for client-side operations.
+ * @type {number}
+ */
 export const TIMEOUT_DURATION_MILLIS = 10_000;
