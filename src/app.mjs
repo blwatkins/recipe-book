@@ -108,6 +108,7 @@ app.post('/api/ingredient-category', async (request, response) => {
     const success = await IngredientCategory.addCategory(name, description);
 
     if (success) {
+        IngredientCategory.clearCache();
         response.status(201).json({ message: 'Ingredient category created successfully.' });
     } else {
         response.status(500).json({ message: 'Failed to create ingredient category.' });

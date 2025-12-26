@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-import { Validation } from '../../src-shared/validation.mjs';
-
 import { IngredientCategoriesClient } from '../db/ingredients-category-client.mjs';
 
 export class IngredientCategory {
@@ -34,32 +32,18 @@ export class IngredientCategory {
      * @returns {void}
      */
     static clearCache() {
-        IngredientCategory.#namesCache = [];
+        IngredientCategory.#namesCache.length = 0;
     }
 
     /**
      * @param name {string}
      * @param description {string | null}
      * @returns {Promise<boolean>}
-     * @throws {Error}
      */
     static async addCategory(name, description) {
-        if (!Validation.isNonEmptyString(name)) {
-            throw new Error('IngredientCategory name must be a non-empty string.');
-        } else {
-            name = name.trim().toLowerCase();
-        }
-
-        if (!Validation.isNonEmptyString(description)) {
-            description = null;
-        } else {
-            description = description.trim();
-        }
-
         const dbClient = await IngredientCategory.buildDatabaseClient();
         const success = await dbClient.insertIngredientCategory(name, description);
         await dbClient.closeConnection();
-        IngredientCategory.clearCache();
         return success;
     }
 
@@ -68,10 +52,14 @@ export class IngredientCategory {
      */
     static async getAllNames() {
         if (IngredientCategory.#namesCache.length === 0) {
-            const dbClient = await IngredientCategory.buildDatabaseClient();
-            const result = await dbClient.queryAllIngredientCategoryNames();
-            IngredientCategory.#namesCache = result.map(row => row.name);
-            await dbClient.closeConnection();
+            try {
+                const dbClient = await IngredientCategory.buildDatabaseClient();
+                const result = await dbClient.queryAllIngredientCategoryNames();
+                IngredientCategory.#namesCache.push(...result.map(row => row.name).sort());
+                await dbClient.closeConnection();
+            } catch (error) {
+                console.error('Error fetching ingredient category names.', error);
+            }
         }
 
         return IngredientCategory.#namesCache;
@@ -82,9 +70,7 @@ export class IngredientCategory {
      */
     static async buildDatabaseClient() {
         const dbClient = new IngredientCategoriesClient();
-        await IngredientCategoriesClient.buildConnection()
-            .then((connection) => { dbClient.connection = connection; })
-            .catch((error) => { console.error('Error building database connection.', error); });
+        dbClient.connection = await IngredientCategoriesClient.buildConnection();
         return dbClient;
     }
 }

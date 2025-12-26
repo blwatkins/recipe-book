@@ -25,19 +25,35 @@ import mysql from 'mysql2/promise';
 import { Validation } from '../../src-shared/validation.mjs';
 
 export class DatabaseClient {
-    #connection;
+    /**
+     * @type {mysql.Connection | null}
+     */
+    #connection = null;
 
+    /**
+     * @throws {Error}
+     */
     constructor() {
         if (!DatabaseClient.hasValidConfig()) {
             throw new Error('Invalid database configuration in environment variables.');
         }
     }
 
+    /**
+     * @returns {mysql.Connection|null}
+     */
     get connection() {
         return this.#connection;
     }
 
+    /**
+     * @param connection {mysql.Connection}
+     */
     set connection(connection) {
+        if (!connection) {
+            throw new Error('Connection cannot be null or undefined.');
+        }
+
         this.#connection = connection;
     }
 
@@ -61,7 +77,7 @@ export class DatabaseClient {
     }
 
     /**
-     * @returns {Promise<Connection>}
+     * @returns {Promise<mysql.Connection>}
      */
     static async buildConnection() {
         return mysql.createConnection({
@@ -73,19 +89,20 @@ export class DatabaseClient {
         });
     }
 
+    /**
+     * @returns {Promise<void>}
+     */
     async closeConnection() {
         if (this.#connection) {
-            await this.#connection.end()
-                .then(() => {
-                    this.#connection = null;
-                })
-                .catch((error) => console.error('Error closing database connection.', error));
+            await this.#connection.end();
+            this.#connection = null;
         }
     }
 
     /**
      * @param query {string}
      * @returns {Promise<*[]>}
+     * @throws {Error}
      */
     async queryAll(query) {
         if (!this.connection) {

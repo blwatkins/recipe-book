@@ -39,9 +39,10 @@ export class IngredientCategoriesClient extends DatabaseClient {
 
     /**
      * @returns {Promise<{name: string}[]>}
+     * @throws {Error}
      */
     async queryAllIngredientCategoryNames() {
-        const query = 'SELECT name FROM IngredientCategories ORDER BY name';
+        const query = 'SELECT name FROM IngredientCategories';
         return await this.queryAll(query);
     }
 
