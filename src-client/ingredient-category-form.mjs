@@ -134,9 +134,8 @@ export class IngredientCategoryFormHandler {
      * @returns {boolean}
      */
     #isStringInputValid(input) {
-        if (!input &&
-            !(input instanceof HTMLInputElement) &&
-            !(input instanceof HTMLTextAreaElement)) {
+        if (!input ||
+            !(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
             return false;
         }
 
