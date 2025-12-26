@@ -58,13 +58,18 @@ export class IngredientCategory {
      */
     static async getAllNames() {
         if (IngredientCategory.#namesCache.length === 0) {
+            let dbClient;
+
             try {
-                const dbClient = await IngredientCategory.buildDatabaseClient();
+                dbClient = await IngredientCategory.buildDatabaseClient();
                 const result = await dbClient.queryAllIngredientCategoryNames();
                 IngredientCategory.#namesCache.push(...result.map(row => row.name).sort());
-                await dbClient.closeConnection();
             } catch (error) {
                 console.error('Error fetching ingredient category names.', error);
+            } finally {
+                if (dbClient) {
+                    await dbClient.closeConnection();
+                }
             }
         }
 
