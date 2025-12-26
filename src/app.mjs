@@ -26,6 +26,10 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
+import { Validation } from '../src-shared/validation.mjs';
+
+import { IngredientCategory } from './models/ingredient-category.mjs';
+
 import {
     APP_NAME,
     COPYRIGHT_HOLDER,
@@ -35,9 +39,6 @@ import {
     TRUST_PROXY,
     USER_NAME
 } from './constants.mjs';
-
-import { IngredientCategory } from "./models/ingredient-category.mjs";
-import {Validation} from "../src-shared/validation.mjs";
 
 const app = express();
 
