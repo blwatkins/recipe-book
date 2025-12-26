@@ -143,7 +143,8 @@ app.use((request, response, next) => {
 });
 
 app.use((error, request, response, next) => {
-    console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`, error);
+    console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`);
+    console.error(error);
 
     if (request.path && request.path.startsWith('/api')) {
         response.status(500).json({ error: 'Internal server error.' });
