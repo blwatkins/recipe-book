@@ -30,8 +30,6 @@ import {
 } from './constants.mjs';
 
 export class IngredientCategoryFormHandler {
-    // TODO - form submission handling (fetch API)
-    // TODO - success/error feedback to user
     /**
      * @type {string[]}
      */
