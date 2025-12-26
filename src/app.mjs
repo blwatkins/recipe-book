@@ -77,7 +77,7 @@ const REQUIRED_VIEWS_DATA = {
     APP_NAME: APP_NAME,
     USER_NAME: USER_NAME,
     COPYRIGHT_HOLDER: COPYRIGHT_HOLDER
-}
+};
 
 app.get('/', (request, response) => {
     response.render('index', {
