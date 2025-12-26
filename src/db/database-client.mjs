@@ -88,15 +88,11 @@ export class DatabaseClient {
      * @returns {Promise<*[]>}
      */
     async queryAll(query) {
-        if (this.connection) {
-            try {
-                const [rows] = await this.connection.execute(query);
-                return rows;
-            } catch (error) {
-                console.error('Error querying database.', error);
-            }
+        if (!this.connection) {
+            throw new Error('Database connection is not established.');
         }
 
-        return [];
+        const [rows] = await this.connection.execute(query);
+        return rows;
     }
 }
