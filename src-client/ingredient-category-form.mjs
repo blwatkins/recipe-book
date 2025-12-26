@@ -118,7 +118,7 @@ export class IngredientCategoryFormHandler {
 
         if (isValidInput) {
             const cacheIndex = this.#categoryNamesCache.findIndex((element) => {
-                return element === this.#NAME_INPUT.value.trim().toLowerCase();
+                return element.trim().toLowerCase() === this.#NAME_INPUT.value.trim().toLowerCase();
             });
 
             isUnique = cacheIndex === -1;
@@ -141,15 +141,15 @@ export class IngredientCategoryFormHandler {
     }
 
     #updateFormValidationState() {
-        this.#setValidation(this.#NAME_INPUT, this.#isNameInputValid(), 'Please enter a valid category name.');
+        this.#setCustomValidityMessage(this.#NAME_INPUT, this.#isNameInputValid(), 'Please enter a valid category name.');
     }
 
-    #setValidation(element, isValid, validationMessage){
-        if (element && (element instanceof HTMLElement)) {
+    #setCustomValidityMessage(inputElement, isValid, validationMessage){
+        if (inputElement && (inputElement instanceof HTMLElement)) {
             if (isValid) {
-                element.setCustomValidity('');
+                inputElement.setCustomValidity('');
             } else {
-                element.setCustomValidity(validationMessage);
+                inputElement.setCustomValidity(validationMessage);
             }
         }
     }
