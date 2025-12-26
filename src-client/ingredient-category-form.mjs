@@ -218,7 +218,7 @@ export class IngredientCategoryFormHandler {
             success = false;
         }
 
-        await new Promise((resolve)=> {
+        await new Promise((resolve) => {
             setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
         });
 
