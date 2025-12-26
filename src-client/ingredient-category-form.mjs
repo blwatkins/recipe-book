@@ -146,12 +146,12 @@ export class IngredientCategoryFormHandler {
         this.#setValidation(this.#NAME_INPUT, this.#isNameInputValid(), 'Please enter a valid category name.');
     }
 
-    #setValidation(element, isValid, message){
+    #setValidation(element, isValid, validationMessage){
         if (element && (element instanceof HTMLElement)) {
             if (isValid) {
                 element.setCustomValidity('');
             } else {
-                element.setCustomValidity(message);
+                element.setCustomValidity(validationMessage);
             }
         }
     }
