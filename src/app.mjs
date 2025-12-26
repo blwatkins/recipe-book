@@ -37,6 +37,7 @@ import {
 } from './constants.mjs';
 
 import { IngredientCategory } from "./models/ingredient-category.mjs";
+import {Validation} from "../src-shared/validation.mjs";
 
 const app = express();
 
@@ -99,7 +100,7 @@ app.get('/api/ingredient-category/names', async (request, response) => {
 });
 
 app.post('/api/ingredient-category', async (request, response) => {
-    if (!request.body || !request.body.name) {
+    if (!request.body || !Validation.isNonEmptyString(request.body.name)) {
         response.status(400).json({ message: 'Invalid request body.' });
         return;
     }
