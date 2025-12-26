@@ -46,12 +46,10 @@ export class IngredientCategory {
         try {
             dbClient = await IngredientCategory.buildDatabaseClient();
             return await dbClient.insertIngredientCategory(name, description);
-        } catch (error) {
+        } finally {
             if (dbClient) {
                 await dbClient.closeConnection();
             }
-
-            throw error;
         }
     }
 
