@@ -78,16 +78,20 @@ app.disable('x-powered-by');
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 
+/**
+ * @type {{APP_NAME: string, USER_NAME: string, COPYRIGHT_HOLDER: string}}
+ */
 const REQUIRED_VIEWS_DATA = {
-    APP_NAME: APP_NAME,
-    USER_NAME: USER_NAME,
-    COPYRIGHT_HOLDER: COPYRIGHT_HOLDER
+    APP_NAME,
+    USER_NAME,
+    COPYRIGHT_HOLDER
 };
 
 try {
     DatabaseClient.connect();
 } catch (error) {
     console.error('Failed to connect to the database.', error);
+    process.exit(1);
 }
 
 app.get('/', (request, response) => {
