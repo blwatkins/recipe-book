@@ -35,15 +35,22 @@ export class IngredientCategoryFormHandler {
      */
     #categoryNamesCache = [];
 
+    /**
+     * @type {string}
+     * @constant
+     */
     #NAME_INPUT_ID = 'name';
-    #NAME_INPUT = undefined;
 
-    #DESCRIPTION_INPUT_ID = 'description';
-    #DESCRIPTION_INPUT = undefined;
+    /**
+     * @type {string}
+     * @constant
+     */
+    #DESCRIPTION_TEXT_AREA_ID = 'description';
 
-    #FORM_ALERT_DIV = undefined;
-
-    #FORM = undefined;
+    #nameInput = undefined;
+    #descriptionTextArea = undefined;
+    #formAlertDiv = undefined;
+    #form = undefined;
 
     async init() {
         this.#categoryNamesCache = await this.#getCategoryNames();
@@ -51,33 +58,33 @@ export class IngredientCategoryFormHandler {
     }
 
     #decorateForm() {
-        this.#FORM = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
+        this.#form = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
 
-        if (this.#FORM) {
-            this.#NAME_INPUT = document.getElementById(this.#NAME_INPUT_ID);
-            this.#DESCRIPTION_INPUT = document.getElementById(this.#DESCRIPTION_INPUT_ID);
-            this.#FORM_ALERT_DIV = document.getElementById(FORM_ALERT_ID);
+        if (this.#form) {
+            this.#nameInput = document.getElementById(this.#NAME_INPUT_ID);
+            this.#descriptionTextArea = document.getElementById(this.#DESCRIPTION_TEXT_AREA_ID);
+            this.#formAlertDiv = document.getElementById(FORM_ALERT_ID);
 
-            this.#FORM.addEventListener('submit', async (event) => {
+            this.#form.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                if (this.#FORM.checkValidity() && this.#isFormValid()) {
+                if (this.#form.checkValidity() && this.#isFormValid()) {
                     this.#updateFormValidationState();
-                    this.#FORM.classList.add(WAS_VALIDATED_CLASS);
+                    this.#form.classList.add(WAS_VALIDATED_CLASS);
                     this.#setPageDisabled(true);
                     await this.#submitIngredientCategory(this.#buildIngredientCategory());
                 } else {
                     this.#updateFormValidationState();
-                    this.#FORM.classList.add(WAS_VALIDATED_CLASS);
+                    this.#form.classList.add(WAS_VALIDATED_CLASS);
                 }
             }, false);
 
-            this.#FORM.addEventListener('change', () => {
-                this.#FORM.classList.remove(WAS_VALIDATED_CLASS);
-                this.#FORM.checkValidity();
+            this.#form.addEventListener('change', () => {
+                this.#form.classList.remove(WAS_VALIDATED_CLASS);
+                this.#form.checkValidity();
                 this.#updateFormValidationState();
-                this.#FORM.classList.add(WAS_VALIDATED_CLASS);
+                this.#form.classList.add(WAS_VALIDATED_CLASS);
             });
 
             this.#setPageDisabled(false);
@@ -103,12 +110,12 @@ export class IngredientCategoryFormHandler {
      * @returns {boolean}
      */
     #isNameInputValid() {
-        const isValidInput = this.#isStringInputValid(this.#NAME_INPUT);
+        const isValidInput = this.#isStringInputValid(this.#nameInput);
         let isUnique = false;
 
         if (isValidInput) {
             const cacheIndex = this.#categoryNamesCache.findIndex((element) => {
-                return element.trim().toLowerCase() === this.#NAME_INPUT.value.trim().toLowerCase();
+                return element.trim().toLowerCase() === this.#nameInput.value.trim().toLowerCase();
             });
 
             isUnique = cacheIndex === -1;
@@ -131,7 +138,7 @@ export class IngredientCategoryFormHandler {
     }
 
     #updateFormValidationState() {
-        this.#setCustomValidityMessage(this.#NAME_INPUT, this.#isNameInputValid(), 'Ingredient category name is required and must be unique.');
+        this.#setCustomValidityMessage(this.#nameInput, this.#isNameInputValid(), 'Ingredient category name is required and must be unique.');
     }
 
     #setCustomValidityMessage(inputElement, isValid, validationMessage){
@@ -167,12 +174,12 @@ export class IngredientCategoryFormHandler {
     #buildIngredientCategory() {
         const ingredientCategory = {};
 
-        if (this.#NAME_INPUT) {
-            ingredientCategory.name = this.#NAME_INPUT.value.trim().toLowerCase();
+        if (this.#nameInput) {
+            ingredientCategory.name = this.#nameInput.value.trim().toLowerCase();
         }
 
-        if (this.#isStringInputValid(this.#DESCRIPTION_INPUT)) {
-            ingredientCategory.description = this.#DESCRIPTION_INPUT.value.trim();
+        if (this.#isStringInputValid(this.#descriptionTextArea)) {
+            ingredientCategory.description = this.#descriptionTextArea.value.trim();
         }
 
         return ingredientCategory;
@@ -222,33 +229,33 @@ export class IngredientCategoryFormHandler {
     }
 
     #addFormSuccessAlert() {
-        if (this.#FORM_ALERT_DIV) {
-            this.#FORM_ALERT_DIV.hidden = false;
-            this.#FORM_ALERT_DIV.classList.add('alert-success');
-            this.#FORM_ALERT_DIV.innerText = 'Ingredient category added successfully!';
+        if (this.#formAlertDiv) {
+            this.#formAlertDiv.hidden = false;
+            this.#formAlertDiv.classList.add('alert-success');
+            this.#formAlertDiv.innerText = 'Ingredient category added successfully!';
         }
     }
 
     #addFormFailureAlert() {
-        if (this.#FORM_ALERT_DIV) {
-            this.#FORM_ALERT_DIV.hidden = false;
-            this.#FORM_ALERT_DIV.classList.add('alert-danger');
-            this.#FORM_ALERT_DIV.innerText = 'An error occurred. Please try again later.';
+        if (this.#formAlertDiv) {
+            this.#formAlertDiv.hidden = false;
+            this.#formAlertDiv.classList.add('alert-danger');
+            this.#formAlertDiv.innerText = 'An error occurred. Please try again later.';
         }
     }
 
     #clearFormAlert() {
-        if (this.#FORM_ALERT_DIV) {
-            this.#FORM_ALERT_DIV.hidden = true;
-            this.#FORM_ALERT_DIV.classList.remove('alert-danger', 'alert-success');
-            this.#FORM_ALERT_DIV.innerText = '';
+        if (this.#formAlertDiv) {
+            this.#formAlertDiv.hidden = true;
+            this.#formAlertDiv.classList.remove('alert-danger', 'alert-success');
+            this.#formAlertDiv.innerText = '';
         }
     }
 
     #resetForm() {
-        if (this.#FORM) {
-            this.#FORM.reset();
-            this.#FORM.classList.remove(WAS_VALIDATED_CLASS);
+        if (this.#form) {
+            this.#form.reset();
+            this.#form.classList.remove(WAS_VALIDATED_CLASS);
             this.#clearFormAlert();
         }
     }

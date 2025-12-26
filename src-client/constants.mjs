@@ -42,7 +42,7 @@ export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';
 
 /**
  * Duration to display form submission alerts (e.g., success or error) before clearing them, in milliseconds.
- * Default: 10 seconds.
+ * Default: 5 seconds.
  * @type {number}
  */
-export const TIMEOUT_DURATION_MILLIS = 10_000;
+export const TIMEOUT_DURATION_MILLIS = 5_000;
