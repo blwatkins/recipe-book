@@ -116,6 +116,8 @@ app.post('/api/ingredient-category', async (request, response) => {
         } else {
             response.status(500).json({message: 'Failed to create ingredient category.'});
         }
+    } catch (error) {
+        response.status(500).json({message: 'Failed to create ingredient category.'});
     } finally {
         IngredientCategory.clearCache();
     }
