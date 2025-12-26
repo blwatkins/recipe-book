@@ -141,7 +141,7 @@ export class IngredientCategoryFormHandler {
     }
 
     #updateFormValidationState() {
-        this.#setCustomValidityMessage(this.#NAME_INPUT, this.#isNameInputValid(), 'Please enter a valid category name.');
+        this.#setCustomValidityMessage(this.#NAME_INPUT, this.#isNameInputValid(), 'Ingredient category name is required and must be unique.');
     }
 
     #setCustomValidityMessage(inputElement, isValid, validationMessage){
