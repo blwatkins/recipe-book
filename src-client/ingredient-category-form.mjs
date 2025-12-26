@@ -211,12 +211,8 @@ export class IngredientCategoryFormHandler {
                 return false;
             }
         }).then(async (success) => {
-            await new Promise((resolve) => {
-                setTimeout(
-                    ()=> {
-                        resolve();
-                    },
-                    TIMEOUT_DURATION_MILLIS);
+            await new Promise((resolve)=> {
+                setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
             });
 
             return success;
@@ -232,7 +228,7 @@ export class IngredientCategoryFormHandler {
             this.#addFormFailureAlert();
 
             await new Promise((resolve) => {
-                setTimeout(()=> { resolve(); }, TIMEOUT_DURATION_MILLIS);
+                setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
             }).then(() => {
                 this.#setPageDisabled(false);
                 this.#clearFormAlert();
