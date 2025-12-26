@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+DROP TRIGGER IF EXISTS IngredientCategories_LowercaseName_BI;
+DROP TRIGGER IF EXISTS IngredientCategories_LowercaseName_BU;
+
 DROP TABLE IF EXISTS RecipeIngredients;
 DROP TABLE IF EXISTS RecipeCategoryAssignments;
 DROP TABLE IF EXISTS IngredientCategoryAssignments;

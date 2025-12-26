@@ -21,6 +21,7 @@
  */
 
 import { Validation } from '../src-shared/validation.mjs';
+import { IngredientCategoryDataHandler as ICHandler } from '../src-shared/ingredient-category-data-handler.mjs';
 
 import {
     DISABLE_TOGGLE_CLASS, FORM_ALERT_ID,
@@ -33,7 +34,7 @@ export class IngredientCategoryFormHandler {
     /**
      * @type {string[]}
      */
-    #categoryNamesCache = [];
+    #categoryNames = [];
 
     /**
      * @type {string}
@@ -53,7 +54,7 @@ export class IngredientCategoryFormHandler {
     #form = undefined;
 
     async init() {
-        this.#categoryNamesCache = await this.#getCategoryNames();
+        this.#categoryNames = await this.#getCategoryNames();
         this.#decorateForm();
     }
 
@@ -87,6 +88,14 @@ export class IngredientCategoryFormHandler {
                 this.#form.classList.add(WAS_VALIDATED_CLASS);
             });
 
+            this.#form.addEventListener('input', (event) => {
+                if (this.#nameInput) {
+                    if (event.target === this.#nameInput) {
+                        this.#nameInput.value = this.#nameInput.value.toLowerCase();
+                    }
+                }
+            });
+
             this.#setPageDisabled(false);
         }
     }
@@ -114,11 +123,8 @@ export class IngredientCategoryFormHandler {
         let isUnique = false;
 
         if (isValidInput) {
-            const cacheIndex = this.#categoryNamesCache.findIndex((element) => {
-                return element.trim().toLowerCase() === this.#nameInput.value.trim().toLowerCase();
-            });
-
-            isUnique = cacheIndex === -1;
+            const name = ICHandler.sanitizeName(this.#nameInput.value);
+            isUnique =  !this.#categoryNames.includes(name)
         }
 
         return isValidInput && isUnique;
@@ -175,11 +181,11 @@ export class IngredientCategoryFormHandler {
         const ingredientCategory = {};
 
         if (this.#nameInput) {
-            ingredientCategory.name = this.#nameInput.value.trim().toLowerCase();
+            ingredientCategory.name = ICHandler.sanitizeName(this.#nameInput.value);
         }
 
         if (this.#isStringInputValid(this.#descriptionTextArea)) {
-            ingredientCategory.description = this.#descriptionTextArea.value.trim();
+            ingredientCategory.description = ICHandler.sanitizeDescription(this.#descriptionTextArea.value);
         }
 
         return ingredientCategory;
@@ -203,7 +209,7 @@ export class IngredientCategoryFormHandler {
 
             if (response && response.ok) {
                 this.#addFormSuccessAlert();
-                this.#categoryNamesCache = await this.#getCategoryNames();
+                this.#categoryNames = await this.#getCategoryNames();
                 success = true;
             } else {
                 this.#addFormFailureAlert();

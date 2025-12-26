@@ -47,7 +47,7 @@ export class IngredientCategory {
         if (IngredientCategory.#NAMES.length === 0) {
             try {
                 const result = await IngredientCategoryClient.queryAllIngredientCategoryNames();
-                IngredientCategory.#NAMES.push(...result.map(row => ICHandler.sanitizeName(name)).sort());
+                IngredientCategory.#NAMES.push(...result.map((row) => ICHandler.sanitizeName(row.name)).sort());
             } catch (error) {
                 console.error('Error fetching ingredient category names.', error);
             }

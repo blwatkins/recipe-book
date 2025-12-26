@@ -35,6 +35,24 @@ CREATE TABLE IF NOT EXISTS IngredientCategories
     description TEXT
 );
 
+DELIMITER //
+CREATE TRIGGER IngredientCategories_LowercaseName_BI
+BEFORE INSERT ON IngredientCategories
+FOR EACH ROW
+BEGIN
+    SET NEW.name = LOWER(NEW.name);
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER IngredientCategories_LowercaseName_BU
+    BEFORE UPDATE ON IngredientCategories
+    FOR EACH ROW
+BEGIN
+    SET NEW.name = LOWER(NEW.name);
+END//
+DELIMITER ;
+
 CREATE TABLE IF NOT EXISTS RecipeCategories
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
