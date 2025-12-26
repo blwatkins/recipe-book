@@ -56,7 +56,7 @@ export class IngredientCategoriesClient extends DatabaseClient {
         if (!Validation.isNonEmptyString(name)) {
             throw new Error('IngredientCategory name must be a non-empty string.');
         } else {
-            name = name.trim();
+            name = name.trim().toLowerCase();
         }
 
         if (!Validation.isNonEmptyString(description)) {

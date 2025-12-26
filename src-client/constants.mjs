@@ -24,4 +24,8 @@ export const WAS_VALIDATED_CLASS = 'was-validated';
 
 export const DISABLE_TOGGLE_CLASS = 'disable-toggle';
 
+export const FORM_ALERT_ID = 'form-alert';
+
 export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';
+
+export const TIMEOUT_DURATION_MILLIS = 10_000;

@@ -20,11 +20,16 @@
  * SOFTWARE.
  */
 
-import { Validation } from "../src-shared/validation.mjs";
-import {DISABLE_TOGGLE_CLASS, INGREDIENT_CATEGORY_FORM_ID, WAS_VALIDATED_CLASS} from "./constants.mjs";
+import { Validation } from '../src-shared/validation.mjs';
+
+import {
+    DISABLE_TOGGLE_CLASS, FORM_ALERT_ID,
+    INGREDIENT_CATEGORY_FORM_ID,
+    TIMEOUT_DURATION_MILLIS,
+    WAS_VALIDATED_CLASS
+} from './constants.mjs';
 
 export class IngredientCategoryFormHandler {
-    // TODO - input validation
     // TODO - form submission handling (fetch API)
     // TODO - success/error feedback to user
     /**
@@ -34,6 +39,13 @@ export class IngredientCategoryFormHandler {
 
     #NAME_INPUT_ID = 'name';
     #NAME_INPUT = undefined;
+
+    #DESCRIPTION_INPUT_ID = 'description';
+    #DESCRIPTION_INPUT = undefined;
+
+    #FORM_ALERT_DIV = undefined;
+
+    #FORM = undefined;
 
     async init() {
         if (document.readyState === 'loading') {
@@ -51,31 +63,33 @@ export class IngredientCategoryFormHandler {
     }
 
     #decorateForm() {
-        this.#NAME_INPUT = document.getElementById(this.#NAME_INPUT_ID);
-        // const descriptionInput = document.getElementById(this.DESCRIPTION_INPUT_ID);
+        this.#FORM = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
 
-        const form = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
+        if (this.#FORM) {
+            this.#NAME_INPUT = document.getElementById(this.#NAME_INPUT_ID);
+            this.#DESCRIPTION_INPUT = document.getElementById(this.#DESCRIPTION_INPUT_ID);
+            this.#FORM_ALERT_DIV = document.getElementById(FORM_ALERT_ID);
 
-        if (form) {
-            form.addEventListener('submit', async (event) => {
+            this.#FORM.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 event.stopPropagation();
 
-                if (form.checkValidity() && this.#isFormValid()) {
+                if (this.#FORM.checkValidity() && this.#isFormValid()) {
+                    this.#updateFormValidationState();
+                    this.#FORM.classList.add(WAS_VALIDATED_CLASS);
                     this.#setPageDisabled(true);
-                    // disableForm();
-                    // await sendContactEmail();
+                    this.#addIngredientCategory(this.#buildIngredientCategory());
+                } else {
+                    this.#updateFormValidationState();
+                    this.#FORM.classList.add(WAS_VALIDATED_CLASS);
                 }
-
-                this.#updateFormValidationState();
-                form.classList.add(WAS_VALIDATED_CLASS);
             }, false);
 
-            form.addEventListener('change', () => {
-                form.classList.remove(WAS_VALIDATED_CLASS);
-                form.checkValidity();
+            this.#FORM.addEventListener('change', () => {
+                this.#FORM.classList.remove(WAS_VALIDATED_CLASS);
+                this.#FORM.checkValidity();
                 this.#updateFormValidationState();
-                form.classList.add(WAS_VALIDATED_CLASS);
+                this.#FORM.classList.add(WAS_VALIDATED_CLASS);
             });
 
             this.#setPageDisabled(false);
@@ -115,10 +129,6 @@ export class IngredientCategoryFormHandler {
         return isValidInput && isUnique;
     }
 
-    #isDescriptionInputValid() {
-
-    }
-
     /**
      * @param input {*}
      * @returns {boolean}
@@ -127,7 +137,6 @@ export class IngredientCategoryFormHandler {
         if (!input &&
             !(input instanceof HTMLInputElement) &&
             !(input instanceof HTMLTextAreaElement)) {
-            console.log('input must be a valid HTMLInputElement');
             return false;
         }
 
@@ -163,5 +172,104 @@ export class IngredientCategoryFormHandler {
         }
 
         return [];
+    }
+
+    /**
+     * @returns {{ name: string | undefined, description: string | undefined }}
+     */
+    #buildIngredientCategory() {
+        const ingredientCategory = {};
+
+        if (this.#NAME_INPUT) {
+            ingredientCategory.name = this.#NAME_INPUT.value.trim().toLowerCase();
+        }
+
+        if (this.#isStringInputValid(this.#DESCRIPTION_INPUT)) {
+            ingredientCategory.description = this.#DESCRIPTION_INPUT.value.trim();
+        }
+
+        return ingredientCategory;
+    }
+
+    #addIngredientCategory(ingredientCategory) {
+        if (!ingredientCategory || (typeof ingredientCategory !== 'object')) {
+            throw new Error('Invalid ingredient category object.');
+        }
+
+        fetch('/api/ingredient-category', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify(ingredientCategory),
+        }).then(async (response) => {
+            if (response.ok) {
+                this.#addFormSuccessAlert();
+                this.#categoryNamesCache = await this.#getCategoryNames();
+                return true;
+            } else {
+                this.#addFormFailureAlert();
+                return false;
+            }
+        }).then(async (success) => {
+            await new Promise((resolve) => {
+                setTimeout(
+                    ()=> {
+                        resolve();
+                    },
+                    TIMEOUT_DURATION_MILLIS);
+            });
+
+            return success;
+        }).then((success) => {
+            if (success) {
+                this.#resetForm();
+            }
+
+            this.#setPageDisabled(false);
+            this.#clearFormAlert();
+        }).catch(async (error) => {
+            console.error('Error adding ingredient category.', error);
+            this.#addFormFailureAlert();
+
+            await new Promise((resolve) => {
+                setTimeout(()=> { resolve(); }, TIMEOUT_DURATION_MILLIS);
+            }).then(() => {
+                this.#setPageDisabled(false);
+                this.#clearFormAlert();
+            });
+        });
+    }
+
+    #addFormSuccessAlert() {
+        if (this.#FORM_ALERT_DIV) {
+            this.#FORM_ALERT_DIV.hidden = false;
+            this.#FORM_ALERT_DIV.classList.add('alert-success');
+            this.#FORM_ALERT_DIV.innerText = 'Ingredient category added successfully!';
+        }
+    }
+
+    #addFormFailureAlert() {
+        if (this.#FORM_ALERT_DIV) {
+            this.#FORM_ALERT_DIV.hidden = false;
+            this.#FORM_ALERT_DIV.classList.add('alert-danger');
+            this.#FORM_ALERT_DIV.innerText = 'An error occurred. Please try again later.';
+        }
+    }
+
+    #clearFormAlert() {
+        if (this.#FORM_ALERT_DIV) {
+            this.#FORM_ALERT_DIV.hidden = true;
+            this.#FORM_ALERT_DIV.classList.remove('alert-danger', 'alert-success');
+            this.#FORM_ALERT_DIV.innerText = '';
+        }
+    }
+
+    #resetForm() {
+        if (this.#FORM) {
+            this.#FORM.reset();
+            this.#FORM.classList.remove(WAS_VALIDATED_CLASS);
+            this.#clearFormAlert();
+        }
     }
 }
