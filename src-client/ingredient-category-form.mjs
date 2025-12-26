@@ -76,8 +76,7 @@ export class IngredientCategoryFormHandler {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
                     this.#setPageDisabled(true);
-                    this.#addIngredientCategory(this.#buildIngredientCategory())
-                        .then(() => { /* empty */ });
+                    await this.#addIngredientCategory(this.#buildIngredientCategory());
                 } else {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
