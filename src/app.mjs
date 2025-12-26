@@ -114,6 +114,14 @@ app.post('/api/ingredient-category', async (request, response) => {
     }
 });
 
+app.use('/api', (request, response) => {
+    response.status(404).json({ error: 'API route not found.' });
+});
+
+app.use((request, response) => {
+    response.status(404).send('Not Found.');
+});
+
 app.use('/api', (error, request, response) => {
     console.error(error);
     response.status(500).json({ error: 'Internal server error.' });
@@ -122,14 +130,6 @@ app.use('/api', (error, request, response) => {
 app.use((error, request, response) => {
     console.error(error);
     response.status(500).send('Internal Server Error.');
-});
-
-app.use('/api', (request, response) => {
-    response.status(404).json({ error: 'API route not found.' });
-});
-
-app.use((request, response) => {
-    response.status(404).send('Not Found.');
 });
 
 app.listen(PORT, () => {
