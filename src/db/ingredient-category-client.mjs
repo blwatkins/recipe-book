@@ -73,7 +73,6 @@ export class IngredientCategoryClient extends DatabaseClient {
 
         const params = [name, description];
 
-
         await this.connection.execute(query, params);
         return true;
     }
