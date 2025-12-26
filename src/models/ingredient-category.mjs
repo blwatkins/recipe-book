@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { IngredientCategoriesClient } from '../db/ingredients-category-client.mjs';
+import { IngredientCategoryClient } from '../db/ingredient-category-client.mjs';
 
 export class IngredientCategory {
     /**
@@ -66,11 +66,11 @@ export class IngredientCategory {
     }
 
     /**
-     * @returns {Promise<IngredientCategoriesClient>}
+     * @returns {Promise<IngredientCategoryClient>}
      */
     static async buildDatabaseClient() {
-        const dbClient = new IngredientCategoriesClient();
-        dbClient.connection = await IngredientCategoriesClient.buildConnection();
+        const dbClient = new IngredientCategoryClient();
+        dbClient.connection = await IngredientCategoryClient.buildConnection();
         return dbClient;
     }
 }

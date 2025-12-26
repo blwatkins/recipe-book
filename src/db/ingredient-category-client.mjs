@@ -24,7 +24,7 @@ import { Validation } from '../../src-shared/validation.mjs';
 
 import { DatabaseClient } from './database-client.mjs';
 
-export class IngredientCategoriesClient extends DatabaseClient {
+export class IngredientCategoryClient extends DatabaseClient {
     /**
      * @inheritDoc
      */
