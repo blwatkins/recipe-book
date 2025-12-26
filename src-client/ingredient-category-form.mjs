@@ -76,7 +76,7 @@ export class IngredientCategoryFormHandler {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
                     this.#setPageDisabled(true);
-                    await this.#addIngredientCategory(this.#buildIngredientCategory());
+                    await this.#submitIngredientCategory(this.#buildIngredientCategory());
                 } else {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
@@ -188,7 +188,7 @@ export class IngredientCategoryFormHandler {
         return ingredientCategory;
     }
 
-    async #addIngredientCategory(ingredientCategory) {
+    async #submitIngredientCategory(ingredientCategory) {
         if (!ingredientCategory || (typeof ingredientCategory !== 'object')) {
             throw new Error('Invalid ingredient category object.');
         }

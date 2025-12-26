@@ -41,8 +41,8 @@ export const FORM_ALERT_ID = 'form-alert';
 export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';
 
 /**
- * Timeout duration for form submissions in milliseconds.
- * Default 10 seconds timeout for client-side operations.
+ * Duration to display form submission alerts (e.g., success or error) before clearing them, in milliseconds.
+ * Default: 10 seconds.
  * @type {number}
  */
 export const TIMEOUT_DURATION_MILLIS = 10_000;
