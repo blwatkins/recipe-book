@@ -47,7 +47,7 @@ export class IngredientCategory {
         if (IngredientCategory.#NAMES.length === 0) {
             try {
                 const result = await IngredientCategoryClient.queryAllIngredientCategoryNames();
-                IngredientCategory.#NAMES.push(...result.map(row => row.name).sort());
+                IngredientCategory.#NAMES.push(...result.map(row => ICHandler.sanitizeName(name)).sort());
             } catch (error) {
                 console.error('Error fetching ingredient category names.', error);
             }
@@ -65,8 +65,8 @@ export class IngredientCategory {
             name = ICHandler.sanitizeName(name);
 
             if (!IngredientCategory.#NAMES.includes(name)) {
-                this.#NAMES.push(name);
-                this.#NAMES.sort();
+                IngredientCategory.#NAMES.push(name);
+                IngredientCategory.#NAMES.sort();
             }
         }
     }

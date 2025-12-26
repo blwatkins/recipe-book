@@ -29,7 +29,7 @@ export class IngredientCategoryClient extends DatabaseClient {
      * @returns {Promise<{name: string}[]>}
      */
     static async queryAllIngredientCategoryNames() {
-        const query = 'SELECT name FROM IngredientCategories';
+        const query = 'SELECT LOWER(name) FROM IngredientCategories';
         return await IngredientCategoryClient.queryAll(query);
     }
 

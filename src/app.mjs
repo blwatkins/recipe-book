@@ -26,11 +26,12 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
+import { IngredientCategoryDataHandler as ICHandler } from '../src-shared/ingredient-category-data-handler.mjs';
 import { Validation } from '../src-shared/validation.mjs';
 
-import { IngredientCategory } from './models/ingredient-category.mjs';
+import { DatabaseClient } from './db/database-client.mjs';
 
-import { IngredientCategoryDataHandler as ICHandler } from '../src-shared/ingredient-category-data-handler.mjs';
+import { IngredientCategory } from './models/ingredient-category.mjs';
 
 import {
     APP_NAME,
@@ -41,7 +42,6 @@ import {
     TRUST_PROXY,
     USER_NAME
 } from './constants.mjs';
-import {DatabaseClient} from "./db/database-client.mjs";
 
 const app = express();
 
@@ -115,15 +115,15 @@ app.post('/api/ingredient-category', async (request, response) => {
         return;
     }
 
-    const { requestName, requestDescription } = request.body;
+    const { name, description } = request.body;
 
     try {
-        const name = ICHandler.sanitizeName(requestName);
-        const description = ICHandler.sanitizeDescription(requestDescription);
-        const success = await IngredientCategory.addCategory(name, description);
+        const sanitizedName = ICHandler.sanitizeName(name);
+        const sanitizedDescription = ICHandler.sanitizeDescription(description);
+        const success = await IngredientCategory.addCategory(sanitizedName, sanitizedDescription);
 
         if (success) {
-            IngredientCategory.addCategoryName(name);
+            IngredientCategory.addCategoryName(sanitizedName);
             response.status(201).json({ message: 'Ingredient category created successfully.' });
         } else {
             response.status(500).json({ error: 'Failed to create ingredient category.' });
