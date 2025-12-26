@@ -222,12 +222,13 @@ export class IngredientCategoryFormHandler {
             setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
         });
 
+        this.#clearFormAlert();
+
         if (success) {
             this.#resetForm();
         }
 
         this.#setPageDisabled(false);
-        this.#clearFormAlert();
     }
 
     #addFormSuccessAlert() {
