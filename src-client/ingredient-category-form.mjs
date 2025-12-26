@@ -118,7 +118,7 @@ export class IngredientCategoryFormHandler {
 
         if (isValidInput) {
             const cacheIndex = this.#categoryNamesCache.findIndex((element) => {
-                return element.trim().toLowerCase() === this.#NAME_INPUT.value.trim().toLowerCase();
+                return element === this.#NAME_INPUT.value.trim().toLowerCase();
             });
 
             isUnique = cacheIndex === -1;
