@@ -76,7 +76,8 @@ export class IngredientCategoryFormHandler {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
                     this.#setPageDisabled(true);
-                    this.#addIngredientCategory(this.#buildIngredientCategory());
+                    this.#addIngredientCategory(this.#buildIngredientCategory())
+                        .then(() => { /* empty */ });
                 } else {
                     this.#updateFormValidationState();
                     this.#FORM.classList.add(WAS_VALIDATED_CLASS);
@@ -188,50 +189,46 @@ export class IngredientCategoryFormHandler {
         return ingredientCategory;
     }
 
-    #addIngredientCategory(ingredientCategory) {
+    async #addIngredientCategory(ingredientCategory) {
         if (!ingredientCategory || (typeof ingredientCategory !== 'object')) {
             throw new Error('Invalid ingredient category object.');
         }
 
-        fetch('/api/ingredient-category', {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify(ingredientCategory),
-        }).then(async (response) => {
-            if (response.ok) {
+        let success;
+
+        try {
+            const response = await fetch('/api/ingredient-category', {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify(ingredientCategory),
+            });
+
+            if (response && response.ok) {
                 this.#addFormSuccessAlert();
                 this.#categoryNamesCache = await this.#getCategoryNames();
-                return true;
+                success = true;
             } else {
                 this.#addFormFailureAlert();
-                return false;
+                success = false;
             }
-        }).then(async (success) => {
-            await new Promise((resolve)=> {
-                setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
-            });
-
-            return success;
-        }).then((success) => {
-            if (success) {
-                this.#resetForm();
-            }
-
-            this.#setPageDisabled(false);
-            this.#clearFormAlert();
-        }).catch(async (error) => {
+        } catch (error) {
             console.error('Error adding ingredient category.', error);
             this.#addFormFailureAlert();
+            success = false;
+        }
 
-            await new Promise((resolve) => {
-                setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
-            }).then(() => {
-                this.#setPageDisabled(false);
-                this.#clearFormAlert();
-            });
+        await new Promise((resolve)=> {
+            setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
         });
+
+        if (success) {
+            this.#resetForm();
+        }
+
+        this.#setPageDisabled(false);
+        this.#clearFormAlert();
     }
 
     #addFormSuccessAlert() {
