@@ -41,10 +41,18 @@ export class IngredientCategory {
      * @returns {Promise<boolean>}
      */
     static async addCategory(name, description) {
-        const dbClient = await IngredientCategory.buildDatabaseClient();
-        const success = await dbClient.insertIngredientCategory(name, description);
-        await dbClient.closeConnection();
-        return success;
+        let dbClient;
+
+        try {
+            dbClient = await IngredientCategory.buildDatabaseClient();
+            return await dbClient.insertIngredientCategory(name, description);
+        } catch (error) {
+            if (dbClient) {
+                await dbClient.closeConnection();
+            }
+
+            throw error;
+        }
     }
 
     /**
