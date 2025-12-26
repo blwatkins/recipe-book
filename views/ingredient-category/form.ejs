@@ -14,17 +14,18 @@
         <form id="ingredient-category-form" class="mx-auto" style="width: 70%">
             <div class="pb-3">
                 <label for="name" class="form-label fs-4">Name</label>
-                <input type="text" class="form-control" id="name" maxlength="64" required />
+                <input type="text" class="form-control disable-toggle" id="name" maxlength="64" required disabled />
                 <div class="invalid-feedback">
                     All ingredient categories must have a name (maximum 64 characters).
+                    Ingredient category names must be unique.
                 </div>
             </div>
             <div class="pb-3">
                 <label for="description" class="form-label fs-4">Description</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
+                <textarea class="form-control disable-toggle" id="description" rows="3" disabled></textarea>
             </div>
             <div class="pb-3 text-center">
-                <button type="submit" class="btn btn-primary" style="width: 30%;">Submit</button>
+                <button type="submit" class="btn btn-primary disable-toggle" style="width: 30%;" disabled>Submit</button>
             </div>
         </form>
     </div>

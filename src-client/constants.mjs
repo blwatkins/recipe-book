@@ -20,4 +20,8 @@
  * SOFTWARE.
  */
 
+export const WAS_VALIDATED_CLASS = 'was-validated';
+
+export const DISABLE_TOGGLE_CLASS = 'disable-toggle';
+
 export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';

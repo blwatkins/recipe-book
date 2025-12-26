@@ -21,7 +21,7 @@
  */
 
 import { Validation } from "../src-shared/validation.mjs";
-import {INGREDIENT_CATEGORY_FORM_ID} from "./constants.mjs";
+import {DISABLE_TOGGLE_CLASS, INGREDIENT_CATEGORY_FORM_ID, WAS_VALIDATED_CLASS} from "./constants.mjs";
 
 export class IngredientCategoryFormHandler {
     // TODO - input validation
@@ -30,14 +30,10 @@ export class IngredientCategoryFormHandler {
     /**
      * @type {string[]}
      */
-    #categoryNames = [];
+    #categoryNamesCache = [];
 
     #NAME_INPUT_ID = 'name';
     #NAME_INPUT = undefined;
-    #NAME_INVALID_FEEDBACK_ID = 'invalid-feedback-name';
-
-    constructor() {
-    }
 
     async init() {
         if (document.readyState === 'loading') {
@@ -50,7 +46,7 @@ export class IngredientCategoryFormHandler {
     }
 
     async #init() {
-        this.#categoryNames = await this.#getCategoryNames();
+        this.#categoryNamesCache = await this.#getCategoryNames();
         this.#decorateForm();
     }
 
@@ -61,12 +57,28 @@ export class IngredientCategoryFormHandler {
         const form = document.getElementById(INGREDIENT_CATEGORY_FORM_ID);
 
         if (form) {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (form.checkValidity() && this.#isFormValid()) {
+                    this.#setPageDisabled(true);
+                    // disableForm();
+                    // await sendContactEmail();
+                }
+
+                this.#updateFormValidationState();
+                form.classList.add(WAS_VALIDATED_CLASS);
+            }, false);
+
             form.addEventListener('change', () => {
-                form.classList.remove('was-validated');
+                form.classList.remove(WAS_VALIDATED_CLASS);
                 form.checkValidity();
                 this.#updateFormValidationState();
-                form.classList.add('was-validated');
+                form.classList.add(WAS_VALIDATED_CLASS);
             });
+
+            this.#setPageDisabled(false);
         }
     }
 
@@ -74,14 +86,43 @@ export class IngredientCategoryFormHandler {
         return this.#isNameInputValid();
     }
 
+    /**
+     * @param isDisabled {boolean}
+     */
+    #setPageDisabled(isDisabled) {
+        const elements = document.getElementsByClassName(DISABLE_TOGGLE_CLASS);
+
+        Array.from(elements).forEach((element) => {
+            element.disabled = isDisabled;
+        });
+    }
+
+    /**
+     * @returns {boolean}
+     */
     #isNameInputValid() {
-        return this.#isStringInputValid(this.#NAME_INPUT);
+        const isValidInput = this.#isStringInputValid(this.#NAME_INPUT);
+        let isUnique = false;
+
+        if (isValidInput) {
+            const cacheIndex = this.#categoryNamesCache.findIndex((element) => {
+                return element.trim().toLowerCase() === this.#NAME_INPUT.value.trim().toLowerCase();
+            });
+
+            isUnique = cacheIndex === -1;
+        }
+
+        return isValidInput && isUnique;
     }
 
     #isDescriptionInputValid() {
 
     }
 
+    /**
+     * @param input {*}
+     * @returns {boolean}
+     */
     #isStringInputValid(input) {
         if (!input &&
             !(input instanceof HTMLInputElement) &&
