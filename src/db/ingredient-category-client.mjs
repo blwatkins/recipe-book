@@ -50,9 +50,14 @@ export class IngredientCategoryClient extends DatabaseClient {
      * @param name {string}
      * @param description {string | null}
      * @returns {Promise<boolean>}
+     * @throws {Error}
      */
     async insertIngredientCategory(name, description) {
         const query = 'INSERT INTO IngredientCategories (name, description) VALUES (?, ?)';
+
+        if (!this.connection) {
+            throw new Error('Database connection is not established.');
+        }
 
         if (!Validation.isNonEmptyString(name)) {
             throw new Error('IngredientCategory name must be a non-empty string.');
@@ -68,16 +73,8 @@ export class IngredientCategoryClient extends DatabaseClient {
 
         const params = [name, description];
 
-        if (this.connection) {
-            try {
-                await this.connection.execute(query, params);
-                return true;
-            } catch (error) {
-                console.error('Error inserting ingredient category.', error);
-                return false;
-            }
-        }
 
-        return false;
+        await this.connection.execute(query, params);
+        return true;
     }
 }
