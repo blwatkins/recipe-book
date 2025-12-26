@@ -57,7 +57,7 @@ export class DatabaseClient {
             && Validation.isNonEmptyString(user)
             && Validation.isNonEmptyString(password)
             && Validation.isNonEmptyString(database)
-        )
+        );
     }
 
     /**
