@@ -124,7 +124,7 @@ export class IngredientCategoryFormHandler {
 
         if (isValidInput) {
             const name = ICHandler.sanitizeName(this.#nameInput.value);
-            isUnique =  !this.#categoryNames.includes(name)
+            isUnique =  !this.#categoryNames.includes(name);
         }
 
         return isValidInput && isUnique;

@@ -54,6 +54,7 @@ export class IngredientCategoryClient extends DatabaseClient {
             await this.pool.execute(query, params);
             return true;
         } catch (error) {
+            console.error('Error inserting ingredient category.', error);
             return false;
         }
     }
