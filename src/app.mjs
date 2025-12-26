@@ -88,7 +88,7 @@ app.get('/', (request, response) => {
     });
 });
 
-app.get('/ingredient-category/new', async (request, response) => {
+app.get('/ingredient-category/new', (request, response) => {
     response.render('ingredient-category/form', {
         title: 'New Ingredient Category',
         constants: REQUIRED_VIEWS_DATA
@@ -112,6 +112,7 @@ app.post('/api/ingredient-category', async (request, response) => {
         const success = await IngredientCategory.addCategory(name, description);
 
         if (success) {
+            IngredientCategory.clearCache();
             response.status(201).json({message: 'Ingredient category created successfully.'});
         } else {
             response.status(500).json({message: 'Failed to create ingredient category.'});
@@ -119,8 +120,6 @@ app.post('/api/ingredient-category', async (request, response) => {
     } catch (error) {
         console.error('Error from [POST /api/ingredient-category].', error);
         response.status(500).json({message: 'Failed to create ingredient category.'});
-    } finally {
-        IngredientCategory.clearCache();
     }
 });
 
