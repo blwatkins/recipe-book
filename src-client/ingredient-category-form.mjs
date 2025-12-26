@@ -46,16 +46,6 @@ export class IngredientCategoryFormHandler {
     #FORM = undefined;
 
     async init() {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', async () => {
-                await this.#init();
-            });
-        } else {
-            await this.#init();
-        }
-    }
-
-    async #init() {
         this.#categoryNamesCache = await this.#getCategoryNames();
         this.#decorateForm();
     }

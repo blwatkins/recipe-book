@@ -102,7 +102,7 @@ app.get('/api/ingredient-category/names', async (request, response) => {
 
 app.post('/api/ingredient-category', async (request, response) => {
     if (!request.body || !Validation.isNonEmptyString(request.body.name)) {
-        response.status(400).json({ message: 'Invalid request body.' });
+        response.status(400).json({ error: 'Invalid request body.' });
         return;
     }
 
@@ -113,32 +113,32 @@ app.post('/api/ingredient-category', async (request, response) => {
 
         if (success) {
             IngredientCategory.clearCache();
-            response.status(201).json({message: 'Ingredient category created successfully.'});
+            response.status(201).json({ message: 'Ingredient category created successfully.' });
         } else {
-            response.status(500).json({message: 'Failed to create ingredient category.'});
+            response.status(500).json({ error: 'Failed to create ingredient category.' });
         }
     } catch (error) {
         console.error('Error from [POST /api/ingredient-category].', error);
-        response.status(500).json({message: 'Failed to create ingredient category.'});
+        response.status(500).json({ error: 'Failed to create ingredient category.' });
     }
 });
 
-app.use('/api', (request, response) => {
-    response.status(404).json({ error: 'API route not found.' });
-});
-
-app.use((request, response) => {
-    response.status(404).send('Not Found.');
-});
-
-app.use('/api', (error, request, response, next) => {
-    console.error(error);
-    response.status(500).json({ error: 'Internal server error.' });
+app.use((request, response, next) => {
+    if (request.path && request.path.startsWith('/api')) {
+        response.status(404).json({ error: 'API route not found.' });
+    } else {
+        response.status(404).send('Not Found.');
+    }
 });
 
 app.use((error, request, response, next) => {
     console.error(error);
-    response.status(500).send('Internal Server Error.');
+
+    if (request.path && request.path.startsWith('/api')) {
+        response.status(500).json({ error: 'Internal server error.' });
+    } else {
+        response.status(500).send('Internal Server Error.');
+    }
 });
 
 app.listen(PORT, () => {
