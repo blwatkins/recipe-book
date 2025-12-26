@@ -20,41 +20,30 @@
  * SOFTWARE.
  */
 
-import { IngredientCategoryDataHandler as ICHandler } from '../../src-shared/ingredient-category-data-handler.mjs';
+import { Validation } from './validation.mjs';
 
-import { DatabaseClient } from './database-client.mjs';
-
-export class IngredientCategoryClient extends DatabaseClient {
+export class IngredientCategoryDataHandler {
     /**
-     * @returns {Promise<{name: string}[]>}
+     * @param name {string}
+     * @returns {string}
      */
-    static async queryAllIngredientCategoryNames() {
-        const query = 'SELECT name FROM IngredientCategories';
-        return await IngredientCategoryClient.queryAll(query);
+    static sanitizeName(name) {
+        if (!Validation.isNonEmptyString(name)) {
+            throw new Error('Ingredient category name must be a non-empty string.');
+        }
+
+        return name.trim().toLowerCase();
     }
 
     /**
-     * @param name {string}
-     * @param description {string | null}
-     * @returns {Promise<boolean>}
-     * @throws {Error}
+     * @param description {string|undefined|null}
+     * @returns {string|null}
      */
-    static async insertIngredientCategory(name, description) {
-        const query = 'INSERT INTO IngredientCategories (name, description) VALUES (?, ?)';
-
-        if (!IngredientCategoryClient.pool) {
-            throw new Error('Database connection is not established.');
+    static sanitizeDescription(description) {
+        if (!Validation.isNonEmptyString(description)) {
+            return null;
         }
 
-        name = ICHandler.sanitizeName(name);
-        description = ICHandler.sanitizeDescription(description);
-        const params = [name, description];
-
-        try {
-            await this.pool.execute(query, params);
-            return true;
-        } catch (error) {
-            return false;
-        }
+        return description.trim();
     }
 }

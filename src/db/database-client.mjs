@@ -26,35 +26,41 @@ import { Validation } from '../../src-shared/validation.mjs';
 
 export class DatabaseClient {
     /**
-     * @type {mysql.Connection | null}
+     * @type {mysql.Pool|null}
      */
-    #connection = null;
+    static #connectionPool = null;
 
     /**
      * @throws {Error}
      */
     constructor() {
+        throw new Error('DatabaseClient is a static class and cannot be instantiated directly.');
+    }
+
+    /**
+     * @returns {mysql.Pool|null}
+     */
+    static get pool() {
+        return DatabaseClient.#connectionPool;
+    }
+
+    /**
+     * @returns {void}
+     */
+    static connect() {
         if (!DatabaseClient.hasValidConfig()) {
             throw new Error('Invalid database configuration in environment variables.');
         }
-    }
 
-    /**
-     * @returns {mysql.Connection|null}
-     */
-    get connection() {
-        return this.#connection;
-    }
-
-    /**
-     * @param connection {mysql.Connection}
-     */
-    set connection(connection) {
-        if (!connection) {
-            throw new Error('Connection cannot be null or undefined.');
+        if (!DatabaseClient.#connectionPool) {
+            DatabaseClient.#connectionPool = mysql.createPool({
+                host: process.env.MYSQL_HOST,
+                port: Number.parseInt(process.env.MYSQL_PORT, 10),
+                user: process.env.MYSQL_USER,
+                password: process.env.MYSQL_PASSWORD,
+                database: process.env.MYSQL_DATABASE
+            });
         }
-
-        this.#connection = connection;
     }
 
     /**
@@ -77,39 +83,20 @@ export class DatabaseClient {
     }
 
     /**
-     * @returns {Promise<mysql.Connection>}
-     */
-    static async buildConnection() {
-        return mysql.createConnection({
-            host: process.env.MYSQL_HOST,
-            port: Number.parseInt(process.env.MYSQL_PORT, 10),
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DATABASE
-        });
-    }
-
-    /**
-     * @returns {Promise<void>}
-     */
-    async closeConnection() {
-        if (this.#connection) {
-            await this.#connection.end();
-            this.#connection = null;
-        }
-    }
-
-    /**
      * @param query {string}
-     * @returns {Promise<*[]>}
+     * @returns {Promise<*>}
      * @throws {Error}
      */
-    async queryAll(query) {
-        if (!this.connection) {
-            throw new Error('Database connection is not established.');
+    static async queryAll(query) {
+        if (!DatabaseClient.pool) {
+            throw new Error('Database connection pool is not established.');
         }
 
-        const [rows] = await this.connection.execute(query);
+        if (!Validation.isNonEmptyString(query)) {
+            throw new Error('Query must be a non-empty string.');
+        }
+
+        const [rows] = await this.pool.execute(query);
         return rows;
     }
 }

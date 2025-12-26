@@ -20,20 +20,16 @@
  * SOFTWARE.
  */
 
+import { IngredientCategoryDataHandler as ICHandler } from '../../src-shared/ingredient-category-data-handler.mjs';
+import { Validation } from '../../src-shared/validation.mjs';
+
 import { IngredientCategoryClient } from '../db/ingredient-category-client.mjs';
 
 export class IngredientCategory {
     /**
      * @type {string[]}
      */
-    static #namesCache = [];
-
-    /**
-     * @returns {void}
-     */
-    static clearCache() {
-        IngredientCategory.#namesCache.length = 0;
-    }
+    static #NAMES = [];
 
     /**
      * @param name {string}
@@ -41,47 +37,37 @@ export class IngredientCategory {
      * @returns {Promise<boolean>}
      */
     static async addCategory(name, description) {
-        let dbClient;
-
-        try {
-            dbClient = await IngredientCategory.buildDatabaseClient();
-            return await dbClient.insertIngredientCategory(name, description);
-        } finally {
-            if (dbClient) {
-                await dbClient.closeConnection();
-            }
-        }
+        return await IngredientCategoryClient.insertIngredientCategory(name, description);
     }
 
     /**
      * @returns {Promise<string[]>}
      */
     static async getAllNames() {
-        if (IngredientCategory.#namesCache.length === 0) {
-            let dbClient;
-
+        if (IngredientCategory.#NAMES.length === 0) {
             try {
-                dbClient = await IngredientCategory.buildDatabaseClient();
-                const result = await dbClient.queryAllIngredientCategoryNames();
-                IngredientCategory.#namesCache.push(...result.map(row => row.name).sort());
+                const result = await IngredientCategoryClient.queryAllIngredientCategoryNames();
+                IngredientCategory.#NAMES.push(...result.map(row => row.name).sort());
             } catch (error) {
                 console.error('Error fetching ingredient category names.', error);
-            } finally {
-                if (dbClient) {
-                    await dbClient.closeConnection();
-                }
             }
         }
 
-        return IngredientCategory.#namesCache;
+        return IngredientCategory.#NAMES;
     }
 
     /**
-     * @returns {Promise<IngredientCategoryClient>}
+     * @param name {string}
+     * @returns {void}
      */
-    static async buildDatabaseClient() {
-        const dbClient = new IngredientCategoryClient();
-        dbClient.connection = await IngredientCategoryClient.buildConnection();
-        return dbClient;
+    static addCategoryName(name) {
+        if (Validation.isNonEmptyString(name)) {
+            name = ICHandler.sanitizeName(name);
+
+            if (!IngredientCategory.#NAMES.includes(name)) {
+                this.#NAMES.push(name);
+                this.#NAMES.sort();
+            }
+        }
     }
 }

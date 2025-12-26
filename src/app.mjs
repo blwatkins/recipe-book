@@ -30,6 +30,8 @@ import { Validation } from '../src-shared/validation.mjs';
 
 import { IngredientCategory } from './models/ingredient-category.mjs';
 
+import { IngredientCategoryDataHandler as ICHandler } from '../src-shared/ingredient-category-data-handler.mjs';
+
 import {
     APP_NAME,
     COPYRIGHT_HOLDER,
@@ -39,6 +41,7 @@ import {
     TRUST_PROXY,
     USER_NAME
 } from './constants.mjs';
+import {DatabaseClient} from "./db/database-client.mjs";
 
 const app = express();
 
@@ -81,6 +84,12 @@ const REQUIRED_VIEWS_DATA = {
     COPYRIGHT_HOLDER: COPYRIGHT_HOLDER
 };
 
+try {
+    DatabaseClient.connect();
+} catch (error) {
+    console.error('Failed to connect to the database.', error);
+}
+
 app.get('/', (request, response) => {
     response.render('index', {
         title: 'Home',
@@ -106,13 +115,15 @@ app.post('/api/ingredient-category', async (request, response) => {
         return;
     }
 
-    const { name, description } = request.body;
+    const { requestName, requestDescription } = request.body;
 
     try {
+        const name = ICHandler.sanitizeName(requestName);
+        const description = ICHandler.sanitizeDescription(requestDescription);
         const success = await IngredientCategory.addCategory(name, description);
 
         if (success) {
-            IngredientCategory.clearCache();
+            IngredientCategory.addCategoryName(name);
             response.status(201).json({ message: 'Ingredient category created successfully.' });
         } else {
             response.status(500).json({ error: 'Failed to create ingredient category.' });
