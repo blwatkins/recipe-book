@@ -123,12 +123,12 @@ app.use((request, response) => {
     response.status(404).send('Not Found.');
 });
 
-app.use('/api', (error, request, response) => {
+app.use('/api', (error, request, response, next) => {
     console.error(error);
     response.status(500).json({ error: 'Internal server error.' });
 });
 
-app.use((error, request, response) => {
+app.use((error, request, response, next) => {
     console.error(error);
     response.status(500).send('Internal Server Error.');
 });
