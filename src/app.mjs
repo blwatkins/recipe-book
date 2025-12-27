@@ -75,11 +75,8 @@ app.use(express.static('public'));
 
 app.use((request, response, next) => {
     response.on('finish', () => {
-        if (response.statusCode === 404) {
-            console.log(`Request received: ${request.method} ${request.originalUrl || request.url} [404 - Not Found]`);
-        } else {
-            console.log(`Request received: ${request.method} ${request.originalUrl || request.url}`);
-        }
+        const baseMessage = `Request received: ${request.method} ${request.originalUrl || request.url}`;
+        console.log(response.statusCode === 404 ? `${baseMessage} [404 - Not Found]` : baseMessage);
     });
     next();
 });
