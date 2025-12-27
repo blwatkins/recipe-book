@@ -46,11 +46,10 @@ export class IngredientCategoryClient extends DatabaseClient {
             throw new Error('Database connection is not established.');
         }
 
-        name = ICHandler.sanitizeName(name);
-        description = ICHandler.sanitizeDescription(description);
-        const params = [name, description];
-
         try {
+            const sanitizedName = ICHandler.sanitizeName(name);
+            const sanitizedDescription = ICHandler.sanitizeDescription(description);
+            const params = [sanitizedName, sanitizedDescription];
             await IngredientCategoryClient.pool.execute(query, params);
             return true;
         } catch (error) {
