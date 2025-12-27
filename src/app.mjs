@@ -73,6 +73,14 @@ app.use(express.json({ limit: '1mb' }));
 app.use(limiter);
 app.use(express.static('public'));
 
+app.use((request, response, next) => {
+    response.on('finish', () => {
+        const baseMessage = `Request received: ${request.method} ${request.originalUrl || request.url}`;
+        console.log(response.statusCode === 404 ? `${baseMessage} [404 - Not Found]` : baseMessage);
+    });
+    next();
+});
+
 app.disable('x-powered-by');
 
 app.set('views', 'views');
