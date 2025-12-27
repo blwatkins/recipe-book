@@ -149,7 +149,7 @@ app.use((error, request, response, next) => {
     console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`);
     console.error(error);
 
-    if (request?.originalUrl?.startsWith('/api')) {
+    if (request.originalUrl?.startsWith('/api')) {
         response.status(500).json({ error: 'Internal server error.' });
     } else {
         response.status(500).send('Internal Server Error.');
