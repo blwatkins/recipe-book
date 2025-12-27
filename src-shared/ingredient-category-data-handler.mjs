@@ -23,6 +23,14 @@
 import { Validation } from './validation.mjs';
 
 export class IngredientCategoryDataHandler {
+    static get NAME_MAX_LENGTH() {
+        return 64;
+    }
+
+    static get DESCRIPTION_MAX_LENGTH() {
+        return 8192;
+    }
+
     /**
      * @param name {string}
      * @returns {string}
@@ -30,6 +38,10 @@ export class IngredientCategoryDataHandler {
     static sanitizeName(name) {
         if (!Validation.isNonEmptyString(name)) {
             throw new Error('Ingredient category name must be a non-empty string.');
+        }
+
+        if (name.length > IngredientCategoryDataHandler.NAME_MAX_LENGTH) {
+            throw new Error(`Ingredient category name must not exceed ${IngredientCategoryDataHandler.NAME_MAX_LENGTH} characters.`);
         }
 
         return name.trim().toLowerCase();
@@ -42,6 +54,10 @@ export class IngredientCategoryDataHandler {
     static sanitizeDescription(description) {
         if (!Validation.isNonEmptyString(description)) {
             return null;
+        }
+
+        if (description.length > IngredientCategoryDataHandler.DESCRIPTION_MAX_LENGTH) {
+            throw new Error(`Ingredient category description must not exceed ${IngredientCategoryDataHandler.DESCRIPTION_MAX_LENGTH} characters.`);
         }
 
         return description.trim();

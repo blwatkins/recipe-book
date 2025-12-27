@@ -53,13 +53,19 @@ export class DatabaseClient {
         }
 
         if (!DatabaseClient.#connectionPool) {
-            DatabaseClient.#connectionPool = mysql.createPool({
-                host: process.env.MYSQL_HOST,
-                port: Number.parseInt(process.env.MYSQL_PORT, 10),
-                user: process.env.MYSQL_USER,
-                password: process.env.MYSQL_PASSWORD,
-                database: process.env.MYSQL_DATABASE
-            });
+            try {
+                DatabaseClient.#connectionPool = mysql.createPool({
+                    host: process.env.MYSQL_HOST,
+                    port: Number.parseInt(process.env.MYSQL_PORT, 10),
+                    user: process.env.MYSQL_USER,
+                    password: process.env.MYSQL_PASSWORD,
+                    database: process.env.MYSQL_DATABASE
+                });
+            } catch (error) {
+                DatabaseClient.#connectionPool = null;
+                console.error('Failed to create MySQL connection pool.');
+                throw error;
+            }
         }
     }
 
