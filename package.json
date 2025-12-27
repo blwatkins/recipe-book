@@ -16,6 +16,9 @@
   "type": "module",
   "main": "src/app.mjs",
   "scripts": {
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
+    "build:watch": "webpack --mode=development --watch",
     "start": "dotenvx run -f .env.prod -- node src/app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "dotenvx run -- nodemon src/app.mjs",
@@ -27,9 +30,12 @@
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "mysql2": "^3.16.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
   }
 }

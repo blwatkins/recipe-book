@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+DROP TRIGGER IF EXISTS ingredient_categories_before_insert;
+DROP TRIGGER IF EXISTS ingredient_categories_before_update;
+
 DROP TABLE IF EXISTS RecipeIngredients;
 DROP TABLE IF EXISTS RecipeCategoryAssignments;
 DROP TABLE IF EXISTS IngredientCategoryAssignments;

@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><%= title %></title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+    <%- include('includes/head', { title: title, constants: constants }); %>
 </head>
 <body>
+<%- include('includes/header', { constants: constants }); %>
 <div class="container">
-    <div id="splash" class="d-flex align-items-center" style="height: 100vh;">
+    <div id="splash" class="d-flex align-items-center" style="height: 80vh;">
         <div class="container">
             <div class="row">
-                <h1 class="text-center">Welcome, <%= username %>!</h1>
+                <h1 class="text-center">Welcome, <%= constants.USER_NAME %>!</h1>
             </div>
             <div class="row">
-                <p class="fs-2 text-center">This is <%= appName %>.</p>
+                <p class="fs-2 text-center">This is <%= constants.APP_NAME %>.</p>
+            </div>
+            <div class="row">
+                <a class="btn btn-primary mx-auto" role="button" href="/ingredient-category/new" style="width: 50%;">New Ingredient Category</a>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<%- include('includes/footer', { constants: constants }); %>
+<%- include('includes/closing-scripts'); %>
 </body>
 </html>

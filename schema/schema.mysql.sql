@@ -23,9 +23,9 @@
 CREATE TABLE IF NOT EXISTS Units
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    singular_name VARCHAR(64) NOT NULL UNIQUE,
-    plural_name VARCHAR(64) NOT NULL UNIQUE,
-    symbol VARCHAR(8) NOT NULL UNIQUE
+    name VARCHAR(64) NOT NULL UNIQUE,
+    plural_name VARCHAR(64),
+    symbol VARCHAR(8)
 );
 
 CREATE TABLE IF NOT EXISTS IngredientCategories
@@ -34,6 +34,24 @@ CREATE TABLE IF NOT EXISTS IngredientCategories
     name VARCHAR(64) NOT NULL UNIQUE,
     description TEXT
 );
+
+DELIMITER //
+CREATE TRIGGER ingredient_categories_before_insert
+BEFORE INSERT ON IngredientCategories
+FOR EACH ROW
+BEGIN
+    SET NEW.name = LOWER(NEW.name);
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER ingredient_categories_before_update
+    BEFORE UPDATE ON IngredientCategories
+    FOR EACH ROW
+BEGIN
+    SET NEW.name = LOWER(NEW.name);
+END//
+DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS RecipeCategories
 (
@@ -46,8 +64,11 @@ CREATE TABLE IF NOT EXISTS Ingredients
 (
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(64) NOT NULL,
+    plural_name VARCHAR(64),
     preparation VARCHAR(64) NOT NULL DEFAULT '',
-    UNIQUE (name, preparation)
+    default_unit_id INTEGER,
+    UNIQUE (name, preparation),
+    FOREIGN KEY (default_unit_id) REFERENCES Units(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Recipes
@@ -55,7 +76,7 @@ CREATE TABLE IF NOT EXISTS Recipes
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(128) NOT NULL UNIQUE,
     serving_amount DECIMAL(10,3) NOT NULL,
-    serving_unit_id INTEGER NOT NULL,
+    serving_unit_id INTEGER,
     approximate_servings BOOLEAN NOT NULL DEFAULT FALSE,
     directions TEXT,
     CHECK (serving_amount > 0),
@@ -95,7 +116,7 @@ CREATE TABLE IF NOT EXISTS RecipeIngredients
     ingredient_id INTEGER NOT NULL,
     preparation_notes VARCHAR(256) NOT NULL DEFAULT '',
     measurement_amount DECIMAL(10,3) NOT NULL,
-    measurement_unit_id INTEGER NOT NULL,
+    measurement_unit_id INTEGER,
     approximate_measurement BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE (recipe_id, ingredient_id, preparation_notes),
     CHECK (measurement_amount > 0),

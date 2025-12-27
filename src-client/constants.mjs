@@ -21,30 +21,28 @@
  */
 
 /**
- * Get the trust proxy setting from environment variables.
- *
- * @return {number|boolean} `true` for 'true', a number for valid numeric strings, or `false` for any other value or if not set.
+ * @type {string}
  */
-function getTrustProxy() {
-    const trustProxy = process.env.TRUST_PROXY;
-    const digitsRegex = /^\d+$/;
+export const WAS_VALIDATED_CLASS = 'was-validated';
 
-    if (trustProxy === 'true') {
-        return true;
-    }
+/**
+ * @type {string}
+ */
+export const DISABLE_TOGGLE_CLASS = 'disable-toggle';
 
-    if (typeof trustProxy === 'string' && digitsRegex.test(trustProxy)) {
-        return Number.parseInt(trustProxy, 10);
-    }
+/**
+ * @type {string}
+ */
+export const FORM_ALERT_ID = 'form-alert';
 
-    return false;
-}
+/**
+ * @type {string}
+ */
+export const INGREDIENT_CATEGORY_FORM_ID = 'ingredient-category-form';
 
-export const PORT = Number.parseInt(process.env.PORT, 10) || 3000;
-export const TRUST_PROXY = getTrustProxy();
-export const APP_NAME = process.env.APP_NAME || 'recipe-book';
-export const USER_NAME = process.env.USER_NAME || 'User';
-export const COPYRIGHT_HOLDER = process.env.COPYRIGHT_HOLDER || 'Copyright Holder';
-
-export const MILLIS_PER_SECOND = 1000;
-export const SECONDS_PER_MINUTE = 60;
+/**
+ * Duration to display form submission alerts (e.g., success or error) before clearing them, in milliseconds.
+ * Default: 5 seconds.
+ * @type {number}
+ */
+export const TIMEOUT_DURATION_MILLIS = 5_000;

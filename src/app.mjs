@@ -26,7 +26,22 @@ import helmet from 'helmet';
 
 import { rateLimit } from 'express-rate-limit';
 
-import { APP_NAME, MILLIS_PER_SECOND, PORT, SECONDS_PER_MINUTE, TRUST_PROXY, USER_NAME } from './constants.mjs';
+import { IngredientCategoryDataHandler as ICHandler } from '../src-shared/ingredient-category-data-handler.mjs';
+import { Validation } from '../src-shared/validation.mjs';
+
+import { DatabaseClient } from './db/database-client.mjs';
+
+import { IngredientCategory } from './models/ingredient-category.mjs';
+
+import {
+    APP_NAME,
+    COPYRIGHT_HOLDER,
+    MILLIS_PER_SECOND,
+    PORT,
+    SECONDS_PER_MINUTE,
+    TRUST_PROXY,
+    USER_NAME
+} from './constants.mjs';
 
 const app = express();
 
@@ -54,6 +69,7 @@ app.use(helmet({
     }
 }));
 app.use(cors());
+app.use(express.json({ limit: '1mb' }));
 app.use(limiter);
 app.use(express.static('public'));
 
@@ -62,12 +78,82 @@ app.disable('x-powered-by');
 app.set('views', 'views');
 app.set('view engine', 'ejs');
 
+/**
+ * @type {{APP_NAME: string, USER_NAME: string, COPYRIGHT_HOLDER: string}}
+ */
+const REQUIRED_VIEWS_DATA = {
+    APP_NAME,
+    USER_NAME,
+    COPYRIGHT_HOLDER
+};
+
+try {
+    DatabaseClient.connect();
+} catch (error) {
+    console.error('Failed to connect to the database.', error);
+}
+
 app.get('/', (request, response) => {
     response.render('index', {
-        title: `${APP_NAME} - Home`,
-        appName: APP_NAME,
-        username: USER_NAME
+        title: 'Home',
+        constants: REQUIRED_VIEWS_DATA
     });
+});
+
+app.get('/ingredient-category/new', (request, response) => {
+    response.render('ingredient-category/form', {
+        title: 'New Ingredient Category',
+        constants: REQUIRED_VIEWS_DATA
+    });
+});
+
+app.get('/api/ingredient-category/names', async (request, response) => {
+    const names = await IngredientCategory.getAllNames();
+    response.json(names);
+});
+
+app.post('/api/ingredient-category', async (request, response) => {
+    if (!request.body || !Validation.isNonEmptyString(request.body.name)) {
+        response.status(400).json({ error: 'Invalid request body.' });
+        return;
+    }
+
+    const { name, description } = request.body;
+
+    try {
+        const sanitizedName = ICHandler.sanitizeName(name);
+        const sanitizedDescription = ICHandler.sanitizeDescription(description);
+        const success = await IngredientCategory.addCategory(sanitizedName, sanitizedDescription);
+
+        if (success) {
+            IngredientCategory.addCategoryName(sanitizedName);
+            response.status(201).json({ message: 'Ingredient category created successfully.' });
+        } else {
+            response.status(500).json({ error: 'Failed to create ingredient category.' });
+        }
+    } catch (error) {
+        console.error('Error from [POST /api/ingredient-category].', error);
+        response.status(500).json({ error: 'Failed to create ingredient category.' });
+    }
+});
+
+app.use((request, response, next) => {
+    if (request?.originalUrl?.startsWith('/api')) {
+        response.status(404).json({ error: 'API route not found.' });
+    } else {
+        response.status(404).send('Not Found.');
+    }
+});
+
+app.use((error, request, response, next) => {
+    console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`);
+    console.error(error);
+
+    if (request.originalUrl?.startsWith('/api')) {
+        response.status(500).json({ error: 'Internal server error.' });
+    } else {
+        response.status(500).send('Internal Server Error.');
+    }
 });
 
 app.listen(PORT, () => {

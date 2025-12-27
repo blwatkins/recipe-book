@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../includes/head', { title: title, constants: constants }); %>
+</head>
+<body>
+<%- include('../includes/header', { constants: constants }); %>
+<div class="container-fluid" style="min-height: 80vh">
+    <div class="row my-3">
+        <h1 class="py-3">New Ingredient Category</h1>
+        <hr/>
+    </div>
+    <div class="row my-3">
+        <form id="ingredient-category-form" class="mx-auto" style="width: 70%">
+            <div class="pb-3">
+                <label for="name" class="form-label fs-4">Name</label>
+                <input type="text" class="form-control disable-toggle" id="name" maxlength="64" required disabled />
+                <div class="invalid-feedback">
+                    All ingredient categories must have a name (maximum 64 characters).
+                    Ingredient category names must be unique.
+                </div>
+            </div>
+            <div class="pb-3">
+                <label for="description" class="form-label fs-4">Description</label>
+                <textarea class="form-control disable-toggle" id="description" rows="3" maxlength="8192" disabled></textarea>
+            </div>
+            <div class="pb-3 text-center">
+                <button type="submit" class="btn btn-primary disable-toggle" style="width: 30%;" disabled>Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="row my-3">
+        <div id="form-alert" class="mx-auto alert" role="alert" style="width: 70%;" hidden>
+        </div>
+    </div>
+</div>
+<%- include('../includes/footer', { constants: constants }); %>
+<%- include('../includes/closing-scripts'); %>
+</body>
+</html>

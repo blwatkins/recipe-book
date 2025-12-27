@@ -12,3 +12,9 @@ node_modules/
 
 # Certificates
 *.crt
+
+# MySQL
+users.mysql.sql
+
+# webpack
+dist/
