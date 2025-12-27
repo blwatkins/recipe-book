@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS IngredientCategories
 );
 
 DELIMITER //
-CREATE TRIGGER IngredientCategories_BeforeInsert
+CREATE TRIGGER ingredient_categories_before_insert
 BEFORE INSERT ON IngredientCategories
 FOR EACH ROW
 BEGIN
@@ -45,7 +45,7 @@ END//
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER IngredientCategories_BeforeUpdate
+CREATE TRIGGER ingredient_categories_before_update
     BEFORE UPDATE ON IngredientCategories
     FOR EACH ROW
 BEGIN

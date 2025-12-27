@@ -51,11 +51,11 @@ export class IngredientCategoryClient extends DatabaseClient {
         const params = [name, description];
 
         try {
-            await this.pool.execute(query, params);
+            await IngredientCategoryClient.pool.execute(query, params);
             return true;
         } catch (error) {
-            console.error('Error inserting ingredient category.', error);
-            return false;
+            console.error('Error inserting ingredient category.');
+            throw error;
         }
     }
 }

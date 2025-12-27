@@ -96,7 +96,7 @@ export class DatabaseClient {
             throw new Error('Query must be a non-empty string.');
         }
 
-        const [rows] = await this.pool.execute(query);
+        const [rows] = await DatabaseClient.pool.execute(query);
         return rows;
     }
 }

@@ -91,7 +91,6 @@ try {
     DatabaseClient.connect();
 } catch (error) {
     console.error('Failed to connect to the database.', error);
-    process.exit(1);
 }
 
 app.get('/', (request, response) => {
@@ -139,7 +138,7 @@ app.post('/api/ingredient-category', async (request, response) => {
 });
 
 app.use((request, response, next) => {
-    if (request.path && request.path.startsWith('/api')) {
+    if (request?.originalUrl?.startsWith('/api')) {
         response.status(404).json({ error: 'API route not found.' });
     } else {
         response.status(404).send('Not Found.');
@@ -150,7 +149,7 @@ app.use((error, request, response, next) => {
     console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`);
     console.error(error);
 
-    if (request.path && request.path.startsWith('/api')) {
+    if (request?.originalUrl?.startsWith('/api')) {
         response.status(500).json({ error: 'Internal server error.' });
     } else {
         response.status(500).send('Internal Server Error.');
