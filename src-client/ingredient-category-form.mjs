@@ -124,7 +124,7 @@ export class IngredientCategoryFormHandler {
 
         if (isValidInput) {
             const name = ICHandler.sanitizeName(this.#nameInput.value);
-            isUnique =  !this.#categoryNames.includes(name);
+            isUnique = !this.#categoryNames.includes(name);
         }
 
         return isValidInput && isUnique;
@@ -201,10 +201,10 @@ export class IngredientCategoryFormHandler {
         try {
             const response = await fetch('/api/ingredient-category', {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 method: 'POST',
-                body: JSON.stringify(ingredientCategory),
+                body: JSON.stringify(ingredientCategory)
             });
 
             if (response && response.ok) {
@@ -222,7 +222,9 @@ export class IngredientCategoryFormHandler {
         }
 
         await new Promise((resolve) => {
-            setTimeout(() => { resolve(); }, TIMEOUT_DURATION_MILLIS);
+            setTimeout(() => {
+                resolve();
+            }, TIMEOUT_DURATION_MILLIS);
         });
 
         this.#clearFormAlert();

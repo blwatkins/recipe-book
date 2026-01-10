@@ -80,11 +80,11 @@ export class DatabaseClient {
         const database = process.env.MYSQL_DATABASE;
 
         return (
-            Validation.isNonEmptyString(host)
-            && Validation.isNumber(port)
-            && Validation.isNonEmptyString(user)
-            && Validation.isNonEmptyString(password)
-            && Validation.isNonEmptyString(database)
+            Validation.isNonEmptyString(host) &&
+            Validation.isNumber(port) &&
+            Validation.isNonEmptyString(user) &&
+            Validation.isNonEmptyString(password) &&
+            Validation.isNonEmptyString(database)
         );
     }
 

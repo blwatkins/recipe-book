@@ -63,7 +63,7 @@ app.use(helmet({
             ],
             scriptSrc: [
                 "'self'",
-                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/',
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/'
             ]
         }
     }

@@ -1,6 +1,6 @@
 {
   "name": "recipe-book",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "private": true,
   "description": "A full-stack web application for managing recipes and ingredients.",
   "homepage": "https://github.com/blwatkins/recipe-book#readme",
@@ -22,7 +22,8 @@
     "start": "dotenvx run -f .env.prod -- node src/app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "dotenvx run -- nodemon src/app.mjs",
-    "dev:prod-config": "dotenvx run -f .env.prod -- nodemon src/app.mjs"
+    "dev:prod-config": "dotenvx run -f .env.prod -- nodemon src/app.mjs",
+    "lint": "eslint ./eslint.config.mjs ./src ./src-client ./src-shared"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.4",
@@ -34,6 +35,12 @@
     "mysql2": "^3.16.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@stylistic/eslint-plugin": "^5.7.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-es-x": "^9.3.0",
+    "eslint-plugin-n": "^17.23.1",
+    "eslint-plugin-security": "^3.0.1",
     "nodemon": "^3.1.11",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1"
