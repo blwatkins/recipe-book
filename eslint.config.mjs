@@ -67,6 +67,8 @@ export default [
 
             'no-template-curly-in-string': 'error',
 
+            'no-undef': 'off',
+
             'no-unmodified-loop-condition': 'error',
 
             'no-unreachable-loop': 'error',
@@ -78,6 +80,8 @@ export default [
             'no-unsafe-optional-chaining': ['error', {
                 disallowArithmeticOperators: true
             }],
+
+            'no-unused-vars': 'off',
 
             'no-useless-assignment': 'error',
 
@@ -153,12 +157,12 @@ export default [
             'n/no-missing-import': 'error',
 
             'n/no-unsupported-features/es-syntax': ['error', {
-                version: '>=20.19.0',
+                version: '>=21.0.0',
                 ignores: []
             }],
 
             'n/no-unsupported-features/node-builtins': ['error', {
-                version: '>=20.19.0',
+                version: '>=21.0.0',
                 ignores: []
             }]
         }
