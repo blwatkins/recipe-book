@@ -35,14 +35,14 @@
     "mysql2": "^3.17.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@stylistic/eslint-plugin": "^5.7.1",
-    "eslint": "^9.39.2",
-    "eslint-plugin-es-x": "^9.3.0",
-    "eslint-plugin-n": "^17.23.2",
-    "eslint-plugin-security": "^3.0.1",
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.9.0",
+    "eslint": "^10.0.0",
+    "eslint-plugin-es-x": "^9.4.1",
+    "eslint-plugin-n": "^17.24.0",
+    "eslint-plugin-security": "^4.0.0",
     "nodemon": "^3.1.11",
-    "webpack": "^5.104.1",
+    "webpack": "^5.105.2",
     "webpack-cli": "^6.0.1"
   }
 }
