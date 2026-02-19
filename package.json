@@ -32,7 +32,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
-    "mysql2": "^3.16.2"
+    "mysql2": "^3.17.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
