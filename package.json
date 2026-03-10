@@ -26,13 +26,13 @@
     "lint": "eslint ./eslint.config.mjs ./src ./src-client ./src-shared"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.52.0",
+    "@dotenvx/dotenvx": "^1.54.1",
     "cors": "^2.8.6",
-    "ejs": "^4.0.1",
+    "ejs": "^5.0.1",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.2.2",
+    "express-rate-limit": "^8.3.1",
     "helmet": "^8.1.0",
-    "mysql2": "^3.18.2"
+    "mysql2": "^3.19.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
