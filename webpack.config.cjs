@@ -27,10 +27,13 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'public/dist'),
         filename: '[name].js',
+        chunkFilename: '[name].js',
         clean: true
     },
     resolve: {
         extensions: ['.js', '.cjs', '.mjs']
     },
-    devtool: 'source-map',
+    optimization: {
+        emitOnErrors: false
+    }
 };
