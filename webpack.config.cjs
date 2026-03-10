@@ -22,7 +22,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        bundle: './src-client/index.mjs',
+        bundle: './src-client/index.mjs'
     },
     output: {
         path: path.resolve(__dirname, 'public/dist'),

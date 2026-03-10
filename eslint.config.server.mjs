@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Brittni Watkins.
+ * Copyright (C) 2024-2026 brittni and the polar bear LLC.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -18,27 +18,54 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import eslint from '@eslint/js';
+/* This configuration is designed to lint all server-based JavaScript files in the project. */
 
+import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import esX from 'eslint-plugin-es-x';
 import node from 'eslint-plugin-n';
 import security from 'eslint-plugin-security';
+import globals from 'globals';
 
-import stylistic from '@stylistic/eslint-plugin';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-export default [
-    eslint.configs.recommended,
-    esX.configs['flat/restrict-to-es2023'],
-    node.configs['flat/recommended'],
-    security.configs.recommended,
-    stylistic.configs['recommended'],
+export default defineConfig([
+    globalIgnores([
+        '_compiled/**',
+        '_dist/**',
+        'public/**',
+        'src-client/**'
+    ]),
     {
+        files: [
+            '**/*.js',
+            '**/*.mjs',
+            '**/*.cjs',
+            '**/*.jsx'
+        ],
+        plugins: {
+            'es-x': esX,
+            'n': node,
+            'security': security,
+            '@stylistic': stylistic
+        },
+        extends: [
+            eslint.configs.recommended,
+            'es-x/flat/restrict-to-es2022',
+            'n/flat/recommended',
+            'security/recommended',
+            '@stylistic/recommended'
+        ],
         languageOptions: {
-            ecmaVersion: 2023,
-            sourceType: 'module'
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: {
+                ...globals.node
+            }
         },
         rules: {
             /* @eslint/js */
+
             'array-callback-return': ['error', {
                 checkForEach: true
             }],
@@ -64,8 +91,6 @@ export default [
             'no-self-compare': 'error',
 
             'no-template-curly-in-string': 'error',
-
-            'no-undef': 'off',
 
             'no-unmodified-loop-condition': 'error',
 
@@ -155,14 +180,14 @@ export default [
             'n/no-missing-import': 'error',
 
             'n/no-unsupported-features/es-syntax': ['error', {
-                version: '>=21.0.0',
+                version: '>=20.19.0',
                 ignores: []
             }],
 
             'n/no-unsupported-features/node-builtins': ['error', {
-                version: '>=21.0.0',
+                version: '>=20.19.0',
                 ignores: []
             }]
         }
     }
-];
+]);

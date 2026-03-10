@@ -22,7 +22,7 @@
   },
   "main": "src/main.mjs",
   "scripts": {
-    "lint": "eslint ./eslint.config.mjs ./src ./src-client ./src-shared",
+    "lint:server": "eslint -c eslint.config.server.mjs .",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "build:watch": "webpack --mode=production --watch",
@@ -48,6 +48,7 @@
     "eslint-plugin-es-x": "^9.5.0",
     "eslint-plugin-n": "^17.24.0",
     "eslint-plugin-security": "^4.0.0",
+    "globals": "^17.4.0",
     "nodemon": "^3.1.14",
     "webpack": "^5.105.4",
     "webpack-cli": "^6.0.1"
