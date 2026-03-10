@@ -1,29 +1,36 @@
 {
   "name": "recipe-book",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.0",
+  "license": "MIT",
   "private": true,
   "description": "A full-stack web application for managing recipes and ingredients.",
-  "homepage": "https://github.com/blwatkins/recipe-book#readme",
-  "bugs": {
-    "url": "https://github.com/blwatkins/recipe-book/issues"
+  "author": {
+    "name": "Brittni Watkins",
+    "url": "https://blwatkins.github.io/"
   },
+  "homepage": "https://github.com/blwatkins/recipe-book#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/blwatkins/recipe-book.git"
   },
-  "license": "MIT",
-  "author": "brittni watkins",
+  "bugs": {
+    "url": "https://github.com/blwatkins/recipe-book/issues"
+  },
   "type": "module",
-  "main": "src/app.mjs",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "main": "src/main.mjs",
   "scripts": {
+    "lint": "eslint ./eslint.config.mjs ./src ./src-client ./src-shared",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
-    "build:watch": "webpack --mode=development --watch",
-    "start": "dotenvx run -f .env.prod -- node src/app.mjs",
+    "build:watch": "webpack --mode=production --watch",
+    "build:watch:dev": "webpack --mode=development --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "dotenvx run -- nodemon src/app.mjs",
-    "dev:prod-config": "dotenvx run -f .env.prod -- nodemon src/app.mjs",
-    "lint": "eslint ./eslint.config.mjs ./src ./src-client ./src-shared"
+    "serve": "dotenvx run -f .env.prod -- nodemon src/main.mjs",
+    "serve:dev": "dotenvx run -- nodemon src/main.mjs",
+    "start": "dotenvx run -f .env.prod -- node src/main.mjs"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.54.1",
