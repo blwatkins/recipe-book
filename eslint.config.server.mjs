@@ -31,8 +31,6 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
     globalIgnores([
-        '_compiled/**',
-        '_dist/**',
         'public/**',
         'src-client/**'
     ]),
