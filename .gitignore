@@ -3,7 +3,7 @@
 # JetBrains IDEs
 .idea/
 
-# Node.js
+# Node.js and npm
 node_modules/
 
 # Environment Variables
@@ -16,5 +16,5 @@ node_modules/
 # MySQL
 users.mysql.sql
 
-# webpack
+# compiling, bundling, testing, and coverage output
 dist/
