@@ -22,6 +22,7 @@
   },
   "main": "src/main.mjs",
   "scripts": {
+    "lint:client": "eslint -c eslint.config.client.mjs ./src-client ./src-shared",
     "lint:server": "eslint -c eslint.config.server.mjs .",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
