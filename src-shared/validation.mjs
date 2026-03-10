@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+// TODO - Rename to GeneralValidator
 export class Validation {
     /**
      * @param value {unknown}

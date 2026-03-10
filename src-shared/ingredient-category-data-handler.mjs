@@ -22,6 +22,7 @@
 
 import { Validation } from './validation.mjs';
 
+// TODO - Rename to IngredientCategoryValidator
 export class IngredientCategoryDataHandler {
     static get NAME_MAX_LENGTH() {
         return 64;
