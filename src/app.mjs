@@ -35,15 +35,14 @@ import {
     APP_NAME,
     COPYRIGHT_HOLDER,
     MILLIS_PER_SECOND,
-    PORT,
     SECONDS_PER_MINUTE,
     TRUST_PROXY,
     USER_NAME
 } from './constants.mjs';
 
-const app = express();
+export const APP = express();
 
-app.set('trust proxy', TRUST_PROXY);
+APP.set('trust proxy', TRUST_PROXY);
 
 const limiter = rateLimit({
     windowMs: MILLIS_PER_SECOND * SECONDS_PER_MINUTE,
@@ -53,7 +52,7 @@ const limiter = rateLimit({
     ipv6Subnet: 56
 });
 
-app.use(helmet({
+APP.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: [
@@ -66,12 +65,12 @@ app.use(helmet({
         }
     }
 }));
-app.use(cors());
-app.use(express.json({ limit: '1mb' }));
-app.use(limiter);
-app.use(express.static('public'));
+APP.use(cors());
+APP.use(express.json({ limit: '1mb' }));
+APP.use(limiter);
+APP.use(express.static('public'));
 
-app.use((request, response, next) => {
+APP.use((request, response, next) => {
     response.on('finish', () => {
         const baseMessage = `Request received: ${request.method} ${request.originalUrl || request.url}`;
         console.log(response.statusCode === 404 ? `${baseMessage} [404 - Not Found]` : baseMessage);
@@ -79,10 +78,10 @@ app.use((request, response, next) => {
     next();
 });
 
-app.disable('x-powered-by');
+APP.disable('x-powered-by');
 
-app.set('views', 'views');
-app.set('view engine', 'ejs');
+APP.set('views', 'views');
+APP.set('view engine', 'ejs');
 
 /**
  * @type {{APP_NAME: string, USER_NAME: string, COPYRIGHT_HOLDER: string}}
@@ -99,26 +98,26 @@ try {
     console.error('Failed to connect to the database.', error);
 }
 
-app.get('/', (request, response) => {
+APP.get('/', (request, response) => {
     response.render('index', {
         title: 'Home',
         constants: REQUIRED_VIEWS_DATA
     });
 });
 
-app.get('/ingredient-category/new', (request, response) => {
+APP.get('/ingredient-category/new', (request, response) => {
     response.render('ingredient-category/form', {
         title: 'New Ingredient Category',
         constants: REQUIRED_VIEWS_DATA
     });
 });
 
-app.get('/api/ingredient-category/names', async (request, response) => {
+APP.get('/api/ingredient-category/names', async (request, response) => {
     const names = await IngredientCategory.getAllNames();
     response.json(names);
 });
 
-app.post('/api/ingredient-category', async (request, response) => {
+APP.post('/api/ingredient-category', async (request, response) => {
     if (!request.body || !Validation.isNonEmptyString(request.body.name)) {
         response.status(400).json({ error: 'Invalid request body.' });
         return;
@@ -143,7 +142,7 @@ app.post('/api/ingredient-category', async (request, response) => {
     }
 });
 
-app.use((request, response, next) => {
+APP.use((request, response, next) => {
     if (request?.originalUrl?.startsWith('/api')) {
         response.status(404).json({ error: 'API route not found.' });
     } else {
@@ -151,7 +150,7 @@ app.use((request, response, next) => {
     }
 });
 
-app.use((error, request, response, next) => {
+APP.use((error, request, response, next) => {
     console.error(`Unhandled error on [${request.method} ${request.originalUrl || request.url}]`);
     console.error(error);
 
@@ -160,8 +159,4 @@ app.use((error, request, response, next) => {
     } else {
         response.status(500).send('Internal Server Error.');
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`Application ${APP_NAME} listening on port ${PORT}`);
 });
