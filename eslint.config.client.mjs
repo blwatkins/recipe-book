@@ -1,46 +1,62 @@
 /*
- * Copyright (C) 2026 brittni and the polar bear LLC.
+ * Copyright (C) 2024-2026 Brittni Watkins.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+ * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/* This configuration is designed to lint all client-based JavaScript files in the project. */
+
 import eslint from '@eslint/js';
-
-import esX from 'eslint-plugin-es-x';
-import node from 'eslint-plugin-n';
-import security from 'eslint-plugin-security';
-
 import stylistic from '@stylistic/eslint-plugin';
+import esX from 'eslint-plugin-es-x';
+import globals from 'globals';
 
-export default [
-    eslint.configs.recommended,
-    esX.configs['flat/restrict-to-es2023'],
-    node.configs['flat/recommended'],
-    security.configs.recommended,
-    stylistic.configs['recommended'],
+import { defineConfig, globalIgnores } from 'eslint/config';
+
+export default defineConfig([
+    globalIgnores([
+        'src/**'
+    ]),
     {
+        files: [
+            '**/*.js',
+            '**/*.mjs',
+            '**/*.cjs',
+            '**/*.jsx'
+        ],
+        plugins: {
+            'es-x': esX,
+            '@stylistic': stylistic
+        },
+        extends: [
+            eslint.configs.recommended,
+            'es-x/flat/restrict-to-es2022',
+            '@stylistic/recommended'
+        ],
         languageOptions: {
-            ecmaVersion: 2023,
-            sourceType: 'module'
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: {
+                ...globals.browser
+            }
         },
         rules: {
             /* @eslint/js */
+
             'array-callback-return': ['error', {
                 checkForEach: true
             }],
@@ -67,8 +83,6 @@ export default [
 
             'no-template-curly-in-string': 'error',
 
-            'no-undef': 'off',
-
             'no-unmodified-loop-condition': 'error',
 
             'no-unreachable-loop': 'error',
@@ -80,8 +94,6 @@ export default [
             'no-unsafe-optional-chaining': ['error', {
                 disallowArithmeticOperators: true
             }],
-
-            'no-unused-vars': 'off',
 
             'no-useless-assignment': 'error',
 
@@ -148,23 +160,7 @@ export default [
                 }
             ],
 
-            '@stylistic/semi': ['error', 'always'],
-
-            /* eslint-plugin-n */
-
-            'n/no-extraneous-import': 'error',
-
-            'n/no-missing-import': 'error',
-
-            'n/no-unsupported-features/es-syntax': ['error', {
-                version: '>=21.0.0',
-                ignores: []
-            }],
-
-            'n/no-unsupported-features/node-builtins': ['error', {
-                version: '>=21.0.0',
-                ignores: []
-            }]
+            '@stylistic/semi': ['error', 'always']
         }
     }
-];
+]);

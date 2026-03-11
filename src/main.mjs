@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 Brittni Watkins.
+ * Copyright (C) 2026 Brittni Watkins.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -18,21 +18,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// TODO - Rename to GeneralValidator
-export class Validation {
-    /**
-     * @param value {unknown}
-     * @returns {boolean}
-     */
-    static isNonEmptyString(value) {
-        return (typeof value === 'string') && (value.trim().length > 0);
-    }
+import { APP } from './app.mjs';
+import { APP_NAME, PORT } from './constants.mjs';
 
-    /**
-     * @param value {unknown}
-     * @returns {boolean}
-     */
-    static isNumber(value) {
-        return (typeof value === 'number') && (!isNaN(value));
-    }
-}
+APP.listen(PORT, () => {
+    console.log(`Application ${APP_NAME} listening on port ${PORT}`);
+});
