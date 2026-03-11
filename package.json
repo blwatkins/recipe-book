@@ -27,7 +27,7 @@
     "lint:all": "npm run lint:client && npm run lint:server",
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
-    "build:all": "npm run build && npm run build:dev",
+    "build:all": "npm run build:dev && npm run build",
     "build:watch": "webpack --mode=production --watch",
     "build:watch:dev": "webpack --mode=development --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
