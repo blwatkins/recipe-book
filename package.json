@@ -47,7 +47,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint": "^10.1.0",
+    "eslint": "^10.2.0",
     "eslint-plugin-es-x": "^9.6.0",
     "eslint-plugin-n": "^17.24.0",
     "eslint-plugin-security": "^4.0.0",
