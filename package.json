@@ -36,13 +36,13 @@
     "start": "dotenvx run -f .env.prod -- node src/main.mjs"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.61.1",
+    "@dotenvx/dotenvx": "^1.64.0",
     "cors": "^2.8.6",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.3.2",
+    "express-rate-limit": "^8.4.1",
     "helmet": "^8.1.0",
-    "mysql2": "^3.22.2"
+    "mysql2": "^3.22.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
